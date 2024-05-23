@@ -11,15 +11,15 @@
 #include "shell.h"
 
 #include "ledcontroller.hh"
-#define LED_GPIO GPIO12
 #define THREAD_STACKSIZE        (THREAD_STACKSIZE_IDLE)
 static char stack[THREAD_STACKSIZE];
 static char stack1[THREAD_STACKSIZE];
 
 static kernel_pid_t _led_pid;
 #define LED_MSG_TYPE_ISR     (0x3456)
-LEDController led(LED_GPIO);
 
+#define LED_GPIO GPIO12
+LEDController led(LED_GPIO);
 void *_led_thread(void *arg)
 {
     (void) arg;
