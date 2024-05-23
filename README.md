@@ -67,9 +67,9 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 ```
 出现以下类似内容即可：
 > 2024-04-01 10:57:40,738 # main(): This is RIOT! (Version: 2024.04-devel-586-g48a8e6)
-2024-04-01 10:57:40,740 # Hello World!
-2024-04-01 10:57:40,744 # You are running RIOT on a(n) esp32-wroom-32 board.
-2024-04-01 10:57:40,749 # This board features a(n) esp32 CPU.
+> 2024-04-01 10:57:40,740 # Hello World!
+> 2024-04-01 10:57:40,744 # You are running RIOT on a(n) esp32-wroom-32 board.
+> 2024-04-01 10:57:40,749 # This board features a(n) esp32 CPU.
 
 #### 2.2.2 方法二: 容器工具链下载
 ##### (1) 容器及容器安装
@@ -104,18 +104,18 @@ sudo docker rmi hello-world
 如果终端出现以下信息，容器即安装成功，可正常运行。
 
 > Hello from Docker!
-This message shows that your installation appears to be working correctly.
-To generate this message, Docker took the following steps:
-The Docker client contacted the Docker daemon.
-The Docker daemon pulled the "hello-world" image from the Docker Hub.
-The Docker daemon created a new container from that image which runs the
-The Docker daemon streamed that output to the Docker client, which sent it
-To try something more ambitious, you can run an Ubuntu container with:
-$ docker run -it ubuntu bash
-Share images, automate workflows, and more with a free Docker ID:
-https://hub.docker.com/
-For more examples and ideas, visit:
-https://docs.docker.com/get-started/
+> This message shows that your installation appears to be working correctly.
+> To generate this message, Docker took the following steps:
+> The Docker client contacted the Docker daemon.
+> The Docker daemon pulled the "hello-world" image from the Docker Hub.
+> The Docker daemon created a new container from that image which runs the
+> The Docker daemon streamed that output to the Docker client, which sent it
+> To try something more ambitious, you can run an Ubuntu container with:
+> $ docker run -it ubuntu bash
+> Share images, automate workflows, and more with a free Docker ID:
+> https://hub.docker.com/
+> For more examples and ideas, visit:
+> https://docs.docker.com/get-started/
 
 
 ##### (2) ESP32 容器工具链下载和编译方法
@@ -136,25 +136,25 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 
 终端会出现以下编译信息包含以下部分：
 > ......
-Compressed 17184 bytes to 11719...
-Wrote 17184 bytes (11719 compressed) at 0x00001000 in 0.5 seconds (effective 279.6 kbit/s)...
-Hash of data verified.
-Compressed 3072 bytes to 85...
-Wrote 3072 bytes (85 compressed) at 0x00008000 in 0.1 seconds (effective 473.8 kbit/s)...
-Hash of data verified.
-Compressed 102096 bytes to 44068...
-Wrote 102096 bytes (44068 compressed) at 0x00010000 in 1.3 seconds (effective 616.2 kbit/s)...
-Hash of data verified.
-Leaving...
-Hard resetting via RTS pin...
-make: Leaving directory ...
+> Compressed 17184 bytes to 11719...
+> Wrote 17184 bytes (11719 compressed) at 0x00001000 in 0.5 seconds (effective 279.6 kbit/s)...
+> Hash of data verified.
+> Compressed 3072 bytes to 85...
+> Wrote 3072 bytes (85 compressed) at 0x00008000 in 0.1 seconds (effective 473.8 kbit/s)...
+> Hash of data verified.
+> Compressed 102096 bytes to 44068...
+> Wrote 102096 bytes (44068 compressed) at 0x00010000 in 1.3 seconds (effective 616.2 kbit/s)...
+> Hash of data verified.
+> Leaving...
+> Hard resetting via RTS pin...
+> make: Leaving directory ...
 
 访问端口并重启，会打印包括以下内容:
 > ...
-2024-04-01 11:04:00,497 # main(): This is RIOT! (Version: 2024.04-devel-480-gd76fc)
-2024-04-01 11:04:00,500 # Hello World!
-2024-04-01 11:04:00,503 # You are running RIOT on a(n) esp32-wroom-32 board.
-2024-04-01 11:04:00,507 # This board features a(n) esp32 CPU.
+> 2024-04-01 11:04:00,497 # main(): This is RIOT! (Version: 2024.04-devel-480-gd76fc)
+> 2024-04-01 11:04:00,500 # Hello World!
+> 2024-04-01 11:04:00,503 # You are running RIOT on a(n) esp32-wroom-32 board.
+> 2024-04-01 11:04:00,507 # This board features a(n) esp32 CPU.
 
 官网提供比较详细的安装教程，如遇到问题，可先浏览[官方 RIOT Docker Toolchain文档](https://doc.riot-os.org/group__cpu__esp32.html#esp32_riot_docker_toolchain)。
 至此，RIOT系统及编译环境已全部完成，需要记住对应方法的编译烧写方式，后续都要用到，可多试试"~/RIOT/examples/" 和 "~/RIOT/tests/"下的案例，尝试去修改这些案例，学会去用RIOT系统。
