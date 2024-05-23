@@ -197,6 +197,6 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 - 理解MQTT协议，包结构。
 - 学会使用ThingsBoards平台包括不限于数据图形化。
 - 实现物联网设备数据定期上传。
-具体内容请参阅[part2_base.md](./part2_base.md)以获取详细信息。
+具体内容请参阅[part2_mqtt_thingsboard.md](./part2_mqtt_thingsboard.md)以获取详细信息。
 
 ### 4.4 TinyML
