@@ -156,5 +156,5 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 > 2024-04-01 11:04:00,507 # This board features a(n) esp32 CPU.  
 
 官网提供比较详细的安装教程，如遇到问题，可先浏览[官方 RIOT Docker Toolchain文档](https://doc.riot-os.org/group__cpu__esp32.html#esp32_riot_docker_toolchain)。
-至此，RIOT系统及编译环境已全部完成，需要记住对应方法的编译烧写方式，后续都要用到，可多试试"[RIOT/examples/](examples/)" 和 "[RIOT/tests/](tests/)"下的案例，尝试去修改这些案例，学会去用RIOT系统。
+至此，RIOT系统及编译环境已全部完成，需要记住对应方法的编译烧写方式，后续都要用到，可多试试"RIOT/examples/" 和 "RIOT/tests/"下的案例，尝试去修改这些案例，学会去用RIOT系统。
 ## 3 实验代码获取
