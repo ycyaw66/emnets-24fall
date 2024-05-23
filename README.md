@@ -105,9 +105,8 @@ sudo docker rmi hello-world
 
 如果终端出现以下信息，容器即安装成功，可正常运行。
 
-> Hello from Docker! 
->
-> This message shows that your installation appears to be working correctly.
+> Hello from Docker!  
+> This message shows that your installation appears to be working correctly.  
 > To generate this message, Docker took the following steps:
 > The Docker client contacted the Docker daemon.
 > The Docker daemon pulled the "hello-world" image from the Docker Hub.
