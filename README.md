@@ -158,3 +158,28 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 官网提供比较详细的安装教程，如遇到问题，可先浏览[官方 RIOT Docker Toolchain文档](https://doc.riot-os.org/group__cpu__esp32.html#esp32_riot_docker_toolchain)。
 至此，RIOT系统及编译环境已全部完成，需要记住对应方法的编译烧写方式，后续都要用到，可多试试"RIOT/examples/" 和 "RIOT/tests/"下的案例，尝试去修改这些案例，学会去用RIOT系统。
 ## 3 实验代码获取
+后续实验都是需要在[实验项目](https://gitee.com/emnets/emnets_experiment.git)的框架下进行,需要在RIOT/examples/路径下下载实验项目。
+
+```bash
+cd RIOT/examples
+git clone https://gitee.com/emnets/emnets_experiment.git
+esp32_idf all
+make BOARD=esp32-wroom-32 flash term -C 00_threads/
+```
+终端串口会打印以下内容:
+> 2024-05-23 15:30:23,696 # main(): This is RIOT! (Version: 2024.04-devel-480-gd76fc)  
+> 2024-05-23 15:30:27,692 # Worker 1: Executing Task 1  
+> 2024-05-23 15:30:27,695 # Worker 2: Executing Task 2  
+> 2024-05-23 15:30:27,697 # Worker 1: Executing Task 1  
+> 2024-05-23 15:30:31,692 # Worker 2: Executing Task 2  
+> 2024-05-23 15:30:31,694 # Worker 1: Executing Task 1  
+## 4 实验
+
+### 4.1 基础实验
+
+
+### 4.2 BLE nimble L2CAP 通信
+
+### 4.3 MQTT Thingsboards
+
+### 4.4 TinyML
