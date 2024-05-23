@@ -70,6 +70,7 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 2024-04-01 10:57:40,740 \# Hello World!
 2024-04-01 10:57:40,744 \# You are running RIOT on a(n) esp32-wroom-32 board.
 2024-04-01 10:57:40,749 \# This board features a(n) esp32 CPU. 
+>
 
 #### 2.2.2 方法二: 容器工具链下载
 ##### (1) 容器及容器安装
