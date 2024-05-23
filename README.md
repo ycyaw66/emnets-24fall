@@ -189,6 +189,14 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 具体内容请参阅[part0_base.md](./part0_base.md)以获取详细信息。
 ### 4.2 BLE nimble L2CAP 通信
 
-### 4.3 MQTT Thingsboards
+### 4.3 MQTT Thingsboard
+
+基于MQTT的ThingsBoard物联网设备管理实验采取MQTT的方式实现ESP32连接ThingsBoard平台，着眼于ThingsBoard平台搭建和使用、ESP32与ThingsBoard基于MQTT协议通信、MPU6050传感器数据上传。
+#### 实验目标:
+
+- 理解MQTT协议，包结构。
+- 学会使用ThingsBoards平台包括不限于数据图形化。
+- 实现物联网设备数据定期上传。
+具体内容请参阅[part2_base.md](./part2_base.md)以获取详细信息。
 
 ### 4.4 TinyML
