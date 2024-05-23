@@ -24,7 +24,7 @@ void LEDController::delay(uint32_t sleep_ms) {
  * ------------------------------------------------------------
  * @note Method 2
  * Uses the gpio_set and gpio_clear functions to set the GPIO pin connected to the LED to the current LED state.
- * void gpio_set(); void gpio_clear();
+ * void gpio_set(gpio_t pin); void gpio_clear(gpio_t pin);
  * @param pin The GPIO pin connected to the LED.
  */
 

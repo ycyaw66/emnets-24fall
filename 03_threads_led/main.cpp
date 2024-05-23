@@ -30,15 +30,16 @@ void *_led_thread(void *arg)
         msg_receive(&msg);
         if (msg.type == LED_MSG_TYPE_ISR)
         {
-            led.blink_faster(2, 100);
+            led.blink_faster(5, 100);
             printf("[LED_THREAD]: LED start to work!!\n");
         }
     }
+    return NULL;
 }
 
 void *_sleep_thread(void *arg)
 {
-    uint16_t sleep_ms = 1000;
+    uint16_t sleep_ms = 2000;
     (void) arg;
     while(1){
         ztimer_sleep(ZTIMER_USEC, sleep_ms * US_PER_MS);
@@ -53,16 +54,10 @@ void *_sleep_thread(void *arg)
 
         }
     }
+    return NULL;
 }
-int led_cmd(int argc, char **argv)
-{
-    (void) argc;
-    (void) argv;
-    led.blink_faster(1, 1000);
-    return 0;
-}
+
 static const shell_command_t shell_commands[] = {
-    { "led", "Control the led radio", led_cmd },
     { NULL, NULL, NULL }
 };
 
