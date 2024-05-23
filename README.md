@@ -66,7 +66,7 @@ make BOARD=esp32-wroom-32 flash -C examples/hello-world/
 make BOARD=esp32-wroom-32 term -C examples/hello-world/ 
 ```
 > 2024-04-01 10:57:40,738 \# main(): This is RIOT! (Version: 2024.04-devel-586-g48a8e6)
-
+>
 > 2024-04-01 10:57:40,740 \# Hello World!
 >
 > 2024-04-01 10:57:40,744 \# You are running RIOT on a(n) esp32-wroom-32 board.
@@ -105,14 +105,15 @@ sudo docker rmi hello-world
 
 如果终端出现以下信息，容器即安装成功，可正常运行。
 
-> Hello from Docker!
+> Hello from Docker! 
+>
 > This message shows that your installation appears to be working correctly.
 > To generate this message, Docker took the following steps:
 > The Docker client contacted the Docker daemon.
 > The Docker daemon pulled the "hello-world" image from the Docker Hub.
 > The Docker daemon created a new container from that image which runs the
 > The Docker daemon streamed that output to the Docker client, which sent it
-> To try something more ambitious, you can run an Ubuntu container with:
+> To try something more ambitious, you can run an Ubuntu container with:2024
 > \$ docker run -it ubuntu bash
 > Share images, automate workflows, and more with a free Docker ID:
 > https://hub.docker.com/
