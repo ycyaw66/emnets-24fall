@@ -174,9 +174,9 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 > 2024-05-23 15:30:31,692 # Worker 2: Executing Task 2  
 > 2024-05-23 15:30:31,694 # Worker 1: Executing Task 1  
 ## 4 实验
-
-### 4.1 基础实验
-
+该实验项目包含基础设备控制、BLE蓝牙通信、基于MQTT的ThingsBoards物联网设备管理以及基于TinyML进行姿态识别的四部分实验。基础设备控制实验着眼与RIOT的多线程控制，基于GPIO引脚输出的LED灯控制以及基于I2C总线的IMU传感器数据读取，最终实现根据设备姿态展示不同的LED显示状态; BLE通信实验基于Nimble的L2cap协议，实现与手机端高速通信; 基于MQTT的ThingsBoards物联网设备管理，在基础实验的基础上，搭建ThingsBoards平台，采用MQTT协议，实现ESP32设备数据定期上传; 基于TingML的ESP32设备姿态识别实验为最终实验，整合前面实验，判断设备当前运动状态。
+### 4.1 基础设备控制
+具体要求见[part0_base.md](./part0_base.md)
 
 ### 4.2 BLE nimble L2CAP 通信
 
