@@ -307,3 +307,43 @@ pub v1/devices/me/telemetry "{speed:22}" 1
   </figure>
 </div>
 平台也显示刚刚发送的信息。到这里，案例就可以结束了。自行修改examples/paho-mqtt路径下的文件main.c，实现更多功能，比如定期发送温度传感器读取到的温度值。
+
+
+### 五、实验内容
+通过前面案例，不难发送我门发送数据需要以`{}`json字符串数据格式发送，同时将案例转化为CPP的形式，一些基础代码也需要修改，请在`20_mqtt_thingsboard_custom/`文件夹实现以下功能，参考同文件夹下的`mqtt_thingsboard.cpp`和`mqtt_thingsboard.hh`对应位置的注释要求，实现mqtt与thingsboard的连接要求，数据上传，连接断开等功能。
+```c++
+int MQTT_Thingsboard::mqtt_connect(MQTTPacket_connectData &data, std::string remote_ip, int port){
+    // Your code here.
+    return 0;
+}
+int MQTT_Thingsboard::mqtt_disconnect(){
+    // Your code here.
+    return 0;
+}
+
+int MQTT_Thingsboard::mqtt_publish(MQTTMessage &msg, std::string topic){
+    // Your code here.
+    return 0;
+}
+```
+
+同时修改同目录下的`main.cpp`文件，补充`void *_publish_thread(void *arg)`函数，实现MPU6050数据定期上传。
+**Note:** 一些宏定义，WIFI IP等需要修改，可根据各自喜好修改包括不限于上述提到的所有内容。
+注意ledcontroller的文件需要替换成前面实验各自对应的文件。
+```bash
+esp32_idf all
+cd ~/RIOT/
+# sudo chmod 777 /dev/ttyUSB*
+make BOARD=esp32-wroom-32 LWIP_IPV4=1 \
+ WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \ 
+ flash term -C examples/emnets_experiment/20_mqtt_thingsboard_custom/
+
+# 基于容器的方法(esp32工具链)
+BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
+DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
+make BOARD=esp32-wroom-32 LWIP_IPV4=1 \
+    WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \ 
+    flash term -C examples/emnets_experiment/20_mqtt_thingsboard_custom/
+```
+
+建议自行查看`MQTTPacket_connectData`、`MQTTClient`、`Network`等结构体以及对应的函数。
