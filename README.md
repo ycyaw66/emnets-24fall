@@ -66,10 +66,10 @@ make BOARD=esp32-wroom-32 flash -C examples/hello-world/
 make BOARD=esp32-wroom-32 term -C examples/hello-world/ 
 ```
 出现以下类似内容即可：
-> 2024-04-01 10:57:40,738 \# main(): This is RIOT! (Version: 2024.04-devel-586-g48a8e6) \n
-> 2024-04-01 10:57:40,740 \# Hello World! \n
-> 2024-04-01 10:57:40,744 \# You are running RIOT on a(n) esp32-wroom-32 board. \n
-> 2024-04-01 10:57:40,749 \# This board features a(n) esp32 CPU. \n
+> 2024-04-01 10:57:40,738 \# main(): This is RIOT! (Version: 2024.04-devel-586-g48a8e6)
+2024-04-01 10:57:40,740 \# Hello World!
+2024-04-01 10:57:40,744 \# You are running RIOT on a(n) esp32-wroom-32 board.
+2024-04-01 10:57:40,749 \# This board features a(n) esp32 CPU. 
 
 #### 2.2.2 方法二: 容器工具链下载
 ##### (1) 容器及容器安装
