@@ -39,6 +39,9 @@ void LEDController::blink_faster(int times, uint32_t delay_time_per_blink) {
 
 修改`03_threads_led/main.cpp`的 `LED_GPIO`定义以及`void *_led_thread(void *arg)`函数，完成实验要求。具体实现不限于上述内容，可自行实现。
 ```c++
+// 03_threads_led/main.cpp
+#define LED_GPIO GPIO12
+LEDController led(LED_GPIO);
 void *_led_thread(void *arg)
 {
     (void) arg;
@@ -63,8 +66,13 @@ typedef enum {
 2. 引脚状态设置。RIOT控制引脚电压有两种方式。
 
 (1) 方法一
+
 `void gpio_write(gpio_t pin, int value);` value 为0时，引脚为低电压，value为1时, 引脚为高电压。
+
 (2) 方法二
+
 `void gpio_set(gpio_t pin);` 将引脚pin设置为高电压。
+
 `void gpio_clear(gpio_t pin);` 将引脚pin设置为低电压。
+
 ### IMU惯性传感器使用及LED展示
