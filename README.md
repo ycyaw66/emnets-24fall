@@ -200,3 +200,13 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 具体内容请参阅[part2_mqtt_thingsboard.md](./part2_mqtt_thingsboard.md)以获取详细信息。
 
 ### 4.4 TinyML
+
+在最终实验中，我们将整合前面所有实验，利用TinyML实现ESP32设备的姿态识别。通过训练和部署轻量级的机器学习模型，判断设备的当前运动状态。
+
+#### 实验目标：
+
+- 了解TinyML的基本概念及其在嵌入式设备上的应用。
+- 掌握模型训练、优化和部署的基本流程。
+- 实现基于TinyML的姿态识别系统，判断ESP32设备的运动状态。
+
+具体内容请参阅[part3_tingml_motion_predict.md](./part3_tingml_motion_predict.md)以获取详细信息。
