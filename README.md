@@ -55,6 +55,8 @@ source ~/.bashrc
 sudo usermod -a -G dialout $USER
 # 重新加载用户组
 newgrp dialout
+# 设备重启下
+reboot
 # chmod 只能临时更改权限
 # sudo chmod 777 /dev/ttyUSB*   
 # 每次带开命令行都要执行
