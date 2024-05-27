@@ -187,7 +187,15 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 - 实现根据设备姿态展示不同LED显示状态的功能。
 
 具体内容请参阅[part0_base.md](./part0_base.md)以获取详细信息。
-### 4.2 BLE nimble L2CAP 通信
+### 4.2 BLE nimble GATT 通信
+本部分实验将深入探讨使用BLE nimble库实现通用属性配置文件（GATT）通信。GATT是BLE协议栈中用于设备服务和特性管理的架构，它支持设备间的数据交互。通过本实验，学生将学习如何定义、配置和使用GATT服务和特性，以实现复杂的数据交互和设备控制功能。
+
+#### 实验目标：
+- 理解BLE GATT协议的结构和功能。
+- 掌握如何使用BLE nimble库定义和管理GATT服务和特性。
+- 学习如何通过GATT特性进行数据的读取和写入。
+- 实现一个能够通过GATT服务交换数据的BLE设备。
+具体内容请参阅[part1_ble_nimble_gatt.md](./part1_ble_nimble_gatt.md)以获取详细信息。
 
 ### 4.3 MQTT Thingsboard
 
