@@ -20,8 +20,8 @@
 #include "mqtt_thingsboard.hh"
 
 using namespace std;
-#define THREAD_STACKSIZE        (THREAD_STACKSIZE_IDLE)
-static char stack[THREAD_STACKSIZE];
+// #define THREAD_STACKSIZE        (THREAD_STACKSIZE_IDLE)
+// static char stack[THREAD_STACKSIZE];
 #define MAIN_QUEUE_SIZE     (8)
 static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
 
@@ -49,25 +49,11 @@ string DEFAULT_IPV6 = "fe80::125:3159:d478:19e9";
 string DEFAULT_IPV4 = "192.168.31.229";
 string DEFAULT_TOPIC = "v1/devices/me/telemetry";
 
-MQTTPacket_connectData data;
 static MQTTClient client;
 static Network network;
-static MQTT_Thingsboard mqtt_thingsboard{&client, &network};
 
 // static int topic_cnt = 0;
 // static char _topic_to_subscribe[MAX_TOPICS][MAX_LEN_TOPIC];
-
-void init(){
-    // Your code here.
-    data = MQTTPacket_connectData_initializer;
-    data.MQTTVersion = MQTT_VERSION_v311;
-    data.clientID.cstring = (char *)DEFAULT_MQTT_CLIENT_ID.c_str();
-    data.username.cstring = (char *)DEFAULT_MQTT_USER.c_str();
-    data.password.cstring = (char *)DEFAULT_MQTT_PWD.c_str();
-    data.keepAliveInterval = DEFAULT_KEEPALIVE_SEC;
-    data.cleansession = IS_CLEAN_SESSION;
-    data.willFlag = 0;
-}
 
 struct Mpu_data {
     int16_t ax;
@@ -79,28 +65,38 @@ struct Mpu_data {
     uint8_t s_led_state;
 };
 
-void *_publish_thread(void *arg)
+void publish_thingsboard(MQTT_Thingsboard &mqtt_thingsboard)
 {
     // Your code here.
-    (void) arg;
     MPU6050 mpu;
     Mpu_data mpu_data; 
     MQTTMessage msg;
     LEDController led_controller(GPIO12);
     mpu.initialize();
+    xtimer_msleep(10000);
+    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+    data.MQTTVersion = MQTT_VERSION_v311;
 
+    data.clientID.cstring = (char *)DEFAULT_MQTT_CLIENT_ID.c_str();
+    data.username.cstring = (char *)DEFAULT_MQTT_USER.c_str();
+    data.password.cstring = (char *)DEFAULT_MQTT_PWD.c_str();
+    data.keepAliveInterval = DEFAULT_KEEPALIVE_SEC;
+    data.cleansession = IS_CLEAN_SESSION;
+    data.willFlag = 0;
     while(1){
         mpu.getMotion6(&mpu_data.ax, &mpu_data.ay, &mpu_data.az, &mpu_data.gx, &mpu_data.gy, &mpu_data.gz);
         mpu_data.s_led_state = led_controller.led_state;
         char json[200];  
         sprintf(json, "{ax:%d, ay:%d, az:%d, gx:%d, gy:%d, gz:%d, led_state:%d}", mpu_data.ax, mpu_data.ay, mpu_data.az, mpu_data.gx, mpu_data.gy, mpu_data.gz, mpu_data.s_led_state);
+        printf("{ax:%d, ay:%d, az:%d, gx:%d, gy:%d, gz:%d, led_state:%d}\n", mpu_data.ax, mpu_data.ay, mpu_data.az, mpu_data.gx, mpu_data.gy, mpu_data.gz, mpu_data.s_led_state);
         msg.qos = QOS0;
         msg.retained = IS_RETAINED_MSG;
         msg.payload = json;
         msg.payloadlen = strlen((char *)msg.payload);
         mqtt_thingsboard.mqtt_connect(data, DEFAULT_IPV4.c_str(), DEFAULT_MQTT_PORT);
         mqtt_thingsboard.mqtt_publish(msg, DEFAULT_TOPIC.c_str());
-        ztimer_sleep(ZTIMER_MSEC, 100 * US_PER_MS);
+        // ztimer_sleep(ZTIMER_MSEC, 500 * US_PER_MS);
+        xtimer_msleep(500);
     }
 }
 
@@ -128,8 +124,10 @@ int main(void)
                    BUF_SIZE);
 
     MQTTStartTask(&client);
-    thread_create(stack, sizeof(stack), THREAD_PRIORITY_MAIN, THREAD_CREATE_STACKTEST, 
-        _publish_thread, NULL, "MQTT_Thingsboard_Publish");
+    // thread_create(stack, sizeof(stack), THREAD_PRIORITY_MAIN - 3, THREAD_CREATE_STACKTEST, 
+    //     _publish_thread, NULL, "MQTT_Thingsboard_Publish");
+    static MQTT_Thingsboard mqtt_thingsboard{&client, &network};
+    publish_thingsboard(mqtt_thingsboard);   
     char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
        

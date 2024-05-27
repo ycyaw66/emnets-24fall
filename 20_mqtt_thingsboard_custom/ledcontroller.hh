@@ -13,6 +13,8 @@ public:
      *
      * @param gpio The GPIO pin to be used for controlling the LED.
      */
+    int led_state;              // 1 | 0
+
     LEDController(int gpio);  
     /**
      * Blinks the LED at a faster rate for a specified number of times.
@@ -35,7 +37,6 @@ public:
     void delay(uint32_t sleep_ms);  // sleep time
 private:  
     int led_gpio;               // led in gpio
-    int led_state;              // 1 | 0
     /**
      * Updates the state of the LED based on the current LED state.
      */
