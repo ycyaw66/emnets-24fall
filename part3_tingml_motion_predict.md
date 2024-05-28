@@ -75,7 +75,7 @@ Digit: 9 - Prediction:
 
 ```bash
 cd ~/RIOT/
-esp_idf esp32
+esp_idf all
 # sudo chmod 777 /dev/ttyUSB*
 make BOARD=esp32-wroom-32 flash term -C tests/pkg/tflite-micro/
 # 点击esp32 靠左侧的自启动按钮，按照提示输入's'，运行程序

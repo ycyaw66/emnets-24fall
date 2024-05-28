@@ -166,7 +166,7 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 cd RIOT/examples
 git clone https://gitee.com/emnets/emnets_experiment.git
 cd emnets_experiment
-esp32_idf all
+esp_idf all
 make BOARD=esp32-wroom-32 flash term -C 00_threads/
 ```
 终端串口会打印以下内容:

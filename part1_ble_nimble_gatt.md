@@ -15,7 +15,7 @@
 ```bash
 cd ~/RIOT/examples/emnets_experiment/10_nimble_server/
 # sudo chmod 777 /dev/ttyUSB*
-esp32_idf all
+esp_idf all
 make BOARD=esp32-wroom-32 flash term
 ```
 > 2024-05-27 14:48:11,300 # Connect to serial port /dev/ttyUSB0  

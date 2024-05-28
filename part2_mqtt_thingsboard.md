@@ -331,7 +331,7 @@ int MQTT_Thingsboard::mqtt_publish(MQTTMessage &msg, std::string topic){
 **Note:** 一些宏定义，WIFI IP等需要修改，可根据各自喜好修改包括不限于上述提到的所有内容。
 注意ledcontroller的文件需要替换成前面实验各自对应的文件。
 ```bash
-esp32_idf all
+esp_idf all
 cd ~/RIOT/
 # sudo chmod 777 /dev/ttyUSB*
 make BOARD=esp32-wroom-32 LWIP_IPV4=1 \

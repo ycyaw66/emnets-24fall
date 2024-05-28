@@ -14,7 +14,7 @@
 `00_threads/`提供一个基于多线程的工作调度案例，要使用线程，**需要给每个线程单独分配空间**。
 执行案例。
 ```bash
-esp32_idf all
+esp_idf all
 # sudo chmod 777 /dev/ttyUSB*
 cd ~/RIOT/examples/emnets_experiment/00_threads/
 # 正常执行以下编译命令即可
@@ -142,7 +142,7 @@ void *_led_thread(void *arg)
 #### (3) 编译程序
 
 ```bash
-esp32_idf all
+esp_idf all
 # sudo chmod 777 /dev/ttyUSB*
 cd ~/RIOT/examples/emnets_experiment/03_threads_led/
 # 正常执行以下编译命令即可
