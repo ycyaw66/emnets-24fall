@@ -226,14 +226,14 @@ Client esp32_test sending DISCONNECT
 cd ~/RIOT/
 # sudo chmod 777 /dev/ttyUSB*
 esp_idf all
-make BOARD=esp32-wroom-32 LWIP_IPV4=1 \
+make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
  WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \ 
  flash term -C examples/paho-mqtt/
  
 # 基于容器的方法(esp32工具链)
 BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
 DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
-make BOARD=esp32-wroom-32 LWIP_IPV4=1 \
+make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
     WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \ 
     flash term -C examples/paho-mqtt/
 ```
