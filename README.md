@@ -8,9 +8,10 @@
 
 ### 2.1 RIOT项目拉取
 需要去github上下载RIOT开源项目，由于我们后续使用的开发板是ESP32系列，需要安装ESP32编译工具。
+经后续测试发现，最新的RIOT LWIP4 发生更新，与案例MQTT存在冲突，因此需要下载2024.01及之前版本的RIOT。
 ```bash
 cd ~
-git clone https://github.com/RIOT-OS/RIOT
+git clone -b 2024.01-branch https://github.com/RIOT-OS/RIOT
 # 可用国内镜像源，如 git clone https://githubfast.com/RIOT-OS/RIOT
 ```
 如果有什么问题，可以先去浏览下[官网文档](https://doc.riot-os.org/getting-started.html)。
