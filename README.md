@@ -169,7 +169,7 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 后续实验都是需要在[实验项目](https://gitee.com/emnets/emnets_experiment.git)的框架下进行,需要在RIOT/examples/路径下下载实验项目。
 
 ```bash
-cd RIOT/examples
+cd ~/RIOT/examples
 git clone https://gitee.com/emnets/emnets_experiment.git
 cd emnets_experiment
 esp_idf all
