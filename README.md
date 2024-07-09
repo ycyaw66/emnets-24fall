@@ -74,6 +74,10 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 > 2024-04-01 10:57:40,744 \# You are running RIOT on a(n) esp32-wroom-32 board.  
 > 2024-04-01 10:57:40,749 \# This board features a(n) esp32 CPU.   
 
+如果flash的时候，出现以下内容，请在flash的时候，按住boot按钮。
+> A fatal error occurred: Failed to connect to ESP32: Wrong boot mode detected (0x13)! The chip needs to be in download mode.  
+
+
 #### 2.2.2 方法二: 容器工具链下载
 ##### (1) 容器及容器安装
 首先什么是容器呢？可以参考GPT4的解释：
