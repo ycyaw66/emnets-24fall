@@ -97,28 +97,47 @@ int main(void)
 ```
 RIOT OS 学会线程如何创建、线程间如何通信即可。
 
-### 二、LED灯控制
+### 二、案例一： 多线程及LED灯控制
 #### (1) LED灯设备介绍
-<img src="./figs/led.jpeg" width="200" height="200">
+<img src="./figs/led_mcolors.jpeg" width="200" height="200">
 
-LED灯只有GND、VCC和IN这三个引脚，GND和VCC接到对应的引脚即可(后续如果引脚不够，可以将GND接到任意低电压的引脚，VCC接到高电压的引脚), IN引脚接到任意一个GPIO引脚，如`GPIO12`引脚。
+RGB LED灯有R,G,B和I这四个引脚，I引脚接到GND引脚即可(后续如果引脚不够，可以将GND接到任意低电压的引脚，VCC接到高电压的引脚), R,G,B引脚接到GPIO引脚，根据案例,R引脚接到`D26`(`GPIO26`),G引脚接到`D25`(`GPIO25`),B引脚接到`D27`(`GPIO27`)。
+#### (2) 案例运行
+```bash
+esp_idf all
+# sudo chmod 777 /dev/ttyUSB*
+cd ~/RIOT/examples/emnets_experiment/01_threads_led/
+# 正常执行以下编译命令即可
+make BOARD=esp32-wroom-32 flash term
+# 基于容器的编译链
+BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
+   DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
+   make BOARD=esp32-wroom-32 flash
+```
+执行完上述
+![](./figs/blink.mp4)
 
-#### (2) 程序要求
-请浏览`03_threads_led/ledcontroller.cpp`和`03_threads_led/ledcontroller.hh`文件的要求并在对应的函数补充代码实现灯控制和自定义闪烁等。
+#### (2) 案例解释
+请浏览`01_threads_led/ledcontroller.cpp`和`01_threads_led/ledcontroller.hh`文件，查看如何控制GPIO来控制灯状态等。
 
 ```c++
-// 03_threads_led/ledcontroller.cpp
+// 01_threads_led/ledcontroller.cpp
 // LED灯控制
-void LEDController::update_led(void){
-    // input your code
+LEDController::LEDController(uint8_t gpio_r, uint8_t gpio_g, uint8_t gpio_b){  
+    printf("LED Controller initialized with (RGB: GPIO%d, GPIO%d, GPIO%d)\n", gpio_r, gpio_g, gpio_b);
+    // Input your code
+    led_gpio[0] = gpio_r;
+    led_gpio[1] = gpio_g;
+    led_gpio[2] = gpio_b;
+    gpio_init(led_gpio[0], GPIO_OUT);
+    rgb[0] = 0;
+} 
+void LEDController::change_led_color(uint8_t color){  
+    // Input your code
+    gpio_write(led_gpio[0], color);
+
 }
 
-// LED灯自定义闪烁
-// times 代表闪烁的次数
-// delay_time_per_blink 代表一次闪烁的时延
-void LEDController::blink_faster(int times, uint32_t delay_time_per_blink) {
-    //  input your code
-}
 ```
 
 修改`03_threads_led/main.cpp`的 `LED_GPIO`定义以及`void *_led_thread(void *arg)`函数，完成实验要求。具体实现不限于上述内容，可自行实现。
@@ -141,18 +160,6 @@ void *_led_thread(void *arg)
 
 #### (3) 编译程序
 
-```bash
-esp_idf all
-# sudo chmod 777 /dev/ttyUSB*
-cd ~/RIOT/examples/emnets_experiment/03_threads_led/
-# 正常执行以下编译命令即可
-make BOARD=esp32-wroom-32 flash term
-
-# 基于容器的编译链
-BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
-   DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
-   make BOARD=esp32-wroom-32 flash
-```
 
 #### (4) 补充:
 1. 引脚模式:`int gpio_init(gpio_t pin, gpio_mode_t mode);` 初始化GPIO引脚(如`GPIO12`)的工作模式，目前支持6种工作模式，具体参考下面内容，本实验只需要通过输出电压来控制LED灯，因此设置为`GPIO_OUT`即可。
@@ -180,8 +187,10 @@ typedef enum {
 
 
 **ledcontroller.cpp** 和 **ledcontroller.hh**后续项目都要用到，之后要用，记得都要复制一份。
+### 三、案例二：IMU惯性传感器数据读取
+该环节代码处于`02_threads_imu`，复制一份上一环节得到的led灯控制源代码和头文件到此文件夹下。
 
-### 三、IMU惯性传感器使用及LED展示
+### 三、实验：IMU惯性传感器使用及LED展示
 
 该环节代码处于`04_threads_led_and_imu`，复制一份上一环节得到的led灯控制源代码和头文件到此文件夹下。
 
