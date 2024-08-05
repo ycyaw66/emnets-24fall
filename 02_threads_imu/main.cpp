@@ -44,7 +44,6 @@ struct MPU6050Data
     float ax, ay, az; // acceler_x_axis, acceler_y_axis, acceler_z_axis
     float gx, gy, gz; // gyroscope_x_axis, gyroscope_y_axis, gyroscope_z_axis
 };
-enum MoveState{Stationary, Tilted, Rotating, Moving};
 void delay_ms(uint32_t sleep_ms)
 {
     ztimer_sleep(ZTIMER_USEC, sleep_ms * US_PER_MS);
