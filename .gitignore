@@ -61,3 +61,4 @@ apps/
 11_tingml_datasets/*
 *.tflite
 *.h5
+# *.npy
