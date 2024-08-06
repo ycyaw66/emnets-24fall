@@ -27,6 +27,7 @@ python3
 
 ### 案例一: 手写字识别
 #### (1) 运行案例
+RIOT OS 官方给了`tests/pkg/tflite-micro/`案例, 其中使用MLP模型做手写字图像Mnist识别.
 执行generate_digit.py 程序，使用数据集里面的第11张图片(即index=10, 从0开始的)， 创建digit文件，并获悉该图片的数字。
 ```bash
 cd ~/RIOT/
