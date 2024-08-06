@@ -58,7 +58,7 @@ bin
 02_imu/
 11_nimble_server_custom/
 apps/
-11_tingml_datasets/*
+10_tingml_datasets/*
 *.tflite
 *.h5
-# *.npy
+*.npy
