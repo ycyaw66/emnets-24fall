@@ -1,23 +1,3 @@
-/*
- * Copyright (C) 2021 Otto-von-Guericke-Universität Magdeburg
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
- */
-
-/**
- * @ingroup     examples
- * @{
- *
- * @file
- * @brief       Blinky application
- *
- * @author      Marian Buschsieweke <marian.buschsieweke@ovgu.de>
- *
- * @}
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <cmath>
@@ -36,7 +16,6 @@
 // #include "xtimer.h"
 #include "ledcontroller.hh"
 #include "mpu6050.h"
-#define LED_GPIO GPIO12
 #define THREAD_STACKSIZE        (THREAD_STACKSIZE_IDLE)
 static char stack_for_led_thread[THREAD_STACKSIZE];
 static char stack_for_imu_thread[THREAD_STACKSIZE];
@@ -60,9 +39,7 @@ void delay_ms(uint32_t sleep_ms)
 }
 /**
  * LED control thread function.
- * This thread initially blinks the LED 10 times with a delay of 100 milliseconds per blink.
  * Then, it enters an infinite loop where it waits for messages to control the LED.
- * When receiving a message of type LED_MSG_TYPE_ISR, it blinks the LED 4 times with a delay of 100 milliseconds per blink.
  * @param arg Unused argument.
  * @return NULL.
  */
@@ -104,14 +81,14 @@ static const shell_command_t shell_commands[] = {
 
 int main(void)
 {
-    _led_pid = thread_create(stack, sizeof(stack), THREAD_PRIORITY_MAIN - 2,
+    _led_pid = thread_create(stack_for_led_thread, sizeof(stack_for_led_thread), THREAD_PRIORITY_MAIN - 2,
                             THREAD_CREATE_STACKTEST, _led_thread, NULL,
                             "led_controller_thread");
     if (_led_pid <= KERNEL_PID_UNDEF) {
         printf("[MAIN] Creation of receiver thread failed\n");
         return 1;
     }
-    thread_create(stack1, sizeof(stack1), THREAD_PRIORITY_MAIN - 1,
+    thread_create(stack_for_imu_thread, sizeof(stack_for_imu_thread), THREAD_PRIORITY_MAIN - 1,
                             THREAD_CREATE_STACKTEST, _imu_thread, NULL,
                             "imu_read_thread");
     printf("[Main] Initialization successful - starting the shell now\n");

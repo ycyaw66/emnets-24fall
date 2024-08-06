@@ -20,6 +20,7 @@ class SerialControl(object):
             print(f"{port} is connected")
         self.history = []
         self.direction = direction
+        
     def get_log(self):
         sub_history = None
         history = []
@@ -51,9 +52,9 @@ class SerialControl(object):
         # Get the current date and time  
         now = datetime.now()  
         # Format the date and time and remove spaces  
-        dir_path = f"../30_data/"
+        dir_path = f"../10_raw_data/"
         os.makedirs(dir_path, exist_ok=True)
-        file_name = f"../30_data/{self.direction}_"
+        file_name = f"../10_raw_data/{self.direction}_"
         file_name += now.strftime("%Y-%m-%d_%H-%M-%S") 
         file_name += ".npy" 
         history = np.array(history)
