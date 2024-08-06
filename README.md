@@ -195,6 +195,20 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 - 实现根据设备姿态展示不同LED显示状态的功能。
 
 具体内容请参阅[part0_base.md](./part0_base.md)以获取详细信息。
+
+### 4.2 基于TinyML对设备运动状态识别
+
+在本实验中, 利用TinyML实现ESP32设备的运动状态识别。通过训练和部署轻量级的机器学习模型，判断设备的当前运动状态, 同时结合实验一, 进行展示.
+
+#### 实验目标：
+
+- 了解TinyML的基本概念及其在嵌入式设备上的应用。
+- 掌握数据集准备、模型训练、优化和部署的基本流程。
+- 实现基于TinyML的姿态识别系统，判断ESP32设备的运动状态。
+
+具体内容请参阅[part1_tingml_motion_predict.md](./part1_tingml_motion_predict.md)以获取详细信息。
+
+
 ### 4.2 BLE nimble GATT 通信
 本部分实验将深入探讨使用BLE nimble库实现通用属性配置文件（GATT）通信。GATT是BLE协议栈中用于设备服务和特性管理的架构，它支持设备间的数据交互。通过本实验，学生将学习如何定义、配置和使用GATT服务和特性，以实现复杂的数据交互和设备控制功能。
 

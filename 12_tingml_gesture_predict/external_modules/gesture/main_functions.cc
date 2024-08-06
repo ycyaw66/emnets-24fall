@@ -17,26 +17,17 @@
 
 #include <stdio.h>
 #include "kernel_defines.h"
-#if IS_USED(MODULE_TENSORFLOW_LITE)
-#include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
-#include "tensorflow/lite/micro/micro_error_reporter.h"
-#include "tensorflow/lite/micro/micro_interpreter.h"
-#include "tensorflow/lite/version.h"
-#else
-#include "tensorflow/lite/micro/all_ops_resolver.h"
-#include "tensorflow/lite/micro/micro_error_reporter.h"
+
+#include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/micro/system_setup.h"
-#endif
+
 #include "tensorflow/lite/schema/schema_generated.h"
 
 #include "blob/model.tflite.h"
 
-#define THRESHOLD       (0.4)
-#define class_num       (4)
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
-    tflite::ErrorReporter* error_reporter = nullptr;
     const tflite::Model* model = nullptr;
     tflite::MicroInterpreter* interpreter = nullptr;
     TfLiteTensor* input = nullptr;
@@ -44,9 +35,10 @@ namespace {
 
     // Create an area of memory to use for input, output, and intermediate arrays.
     // Finding the minimum value for your model may require some trial and error.
-    constexpr int kTensorArenaSize = 1024 * 7;
+    constexpr int kTensorArenaSize = 32 * 1024;
     uint8_t tensor_arena[kTensorArenaSize];
 }  // namespace
+
 
 // The name of this function is important for Arduino compatibility.
 void setup()
@@ -54,12 +46,6 @@ void setup()
 #if IS_USED(MODULE_TFLITE_MICRO)
     tflite::InitializeTarget();
 #endif
-
-    // Set up logging. Google style is to avoid globals or statics because of
-    // lifetime uncertainty, but since this has a trivial destructor it's okay.
-    // NOLINTNEXTLINE(runtime-global-variables)
-    static tflite::MicroErrorReporter micro_error_reporter;
-    error_reporter = &micro_error_reporter;
 
     // Map the model into a usable data structure. This doesn't involve any
     // copying or parsing, it's a very lightweight operation.
@@ -73,16 +59,40 @@ void setup()
     }
 
     // This pulls in all the operation implementations we need.
-    // NOLINTNEXTLINE(runtime-global-variables)
-#if IS_USED(MODULE_TFLITE_MICRO)
-    static tflite::AllOpsResolver resolver;
-#else
-    static tflite::ops::micro::AllOpsResolver resolver;
-#endif
-
+    static tflite::MicroMutableOpResolver<9> resolver;
+    if (resolver.AddConv2D() != kTfLiteOk) {
+        return;
+    }
+    if (resolver.AddExpandDims() != kTfLiteOk)
+    {
+        return;
+    }
+    if (resolver.AddReshape() != kTfLiteOk)
+    {
+        return;
+    }
+    if (resolver.AddRelu() != kTfLiteOk) {
+        return;
+    }
+    if (resolver.AddMean() != kTfLiteOk) {
+        return;
+    }
+    
+    if (resolver.AddFullyConnected() != kTfLiteOk) {
+        return;
+    }
+    if (resolver.AddQuantize() != kTfLiteOk) {
+        return;
+    }
+    if (resolver.AddDequantize() != kTfLiteOk) {
+        return;
+    }
+    if (resolver.AddSoftmax() != kTfLiteOk) {
+        return;
+    }
     // Build an interpreter to run the model with.
     static tflite::MicroInterpreter static_interpreter(
-        model, resolver, tensor_arena, kTensorArenaSize, error_reporter);
+        model, resolver, tensor_arena, kTensorArenaSize);
     interpreter = &static_interpreter;
 
     // Allocate memory from the tensor_arena for the model's tensors.
@@ -95,7 +105,7 @@ void setup()
 }
 
 // The name of this function is important for Arduino compatibility.
-int predict(float *imu_data, int data_len){
+int predict(float *imu_data, int data_len, float threshold, int class_num){
     // Copy digit array in input tensor
     input = interpreter->input(0);
     output = interpreter->output(0);
@@ -116,7 +126,7 @@ int predict(float *imu_data, int data_len){
     for (unsigned i = 0; i < class_num; ++i) {
         float current = output->data.f[i];
         printf("[%d] value: %.02f\n", i, current);
-        if (current > THRESHOLD && current > val) {
+        if (current > threshold && current > val) {
             val = current;
             res = i;
         }
