@@ -217,7 +217,7 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 - 掌握如何使用BLE nimble库定义和管理GATT服务和特性。
 - 学习如何通过GATT特性进行数据的读取和写入。
 - 实现一个能够通过GATT服务交换数据, 获取并改变设备信息的BLE设备。
-具体内容请参阅[part1_ble_nimble_gatt.md](./part2_ble_nimble_gatt.md)以获取详细信息。
+具体内容请参阅[part2_ble_nimble_gatt.md](./part2_ble_nimble_gatt.md)以获取详细信息。
 
 ### 4.3 MQTT Thingsboard
 
