@@ -12,6 +12,7 @@ class ScanDelegate(btle.DefaultDelegate):
         #     print(f"Received new data from {dev.addr}")
 
 target_address = "88:13:bf:0c:12:59"
+# target_address = "input your esp32 MAC addr, please convert captial letters to lowercase letter"
 device_found = True
 addr_type = "public"
 
@@ -59,11 +60,19 @@ def send():
             data_to_write = bytes([0x1])
             characteristic.write(data_to_write, withResponse=False)
             print(f"Data '{data_to_write}' written to characteristic.")
-            time.sleep(5)
+            time.sleep(1)
+            only_read_characteristic = service.getCharacteristics(gatt_svr_chr_rw_demo_readonly_uuid)[0]
+            print(f"Get Data: {only_read_characteristic.read().decode()}")
+            
+            time.sleep(4)
             # TURN OFF LED
+            
             data_to_write = bytes([0x0])
             rc = characteristic.write(data_to_write, withResponse=False)
             print(f"Data '{data_to_write}' written to characteristic.")
+            time.sleep(1)
+            only_read_characteristic = service.getCharacteristics(gatt_svr_chr_rw_demo_readonly_uuid)[0]
+            print(f"Get Data: {only_read_characteristic.read().decode()}")
             # 断开连接
             device.disconnect()
             print("Disconnected from device.")

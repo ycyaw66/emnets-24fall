@@ -47,6 +47,52 @@ make BOARD=esp32-wroom-32 flash term
 
 后续，请参考上述操作，发送0x00数据(注意两个0)，关闭LED灯。请留意上述提到的所有`UUID`。
 
+##### 基于电脑的python脚本
+1) 安装python `bluepy`库。
+```bash
+python3 -m pip install bluepy
+```
+2) 根据刚才串口打印的`Default MAC address: 88:13:BF:0C:12:59`, 将MAC地址替换send_ble.py第15行的`target_address`,注意mac addr 这里需要用小写字母如**88:13:BF:0C:12:59**需要改成**88:13:bf:0c:12:59**，不然找不到对应设备。执行`send_ble.py`脚本。如果出现无法连接的情况，且终端显示`mismatch`等信息，需要重启以下ESP32或者多执行几次脚本，多尝试几次。目前，脚本还不稳定。
+
+```bash
+cd ~/RIOT/examples/emnets_experiment/20_nimble_gatt/
+python3 send_ble.py
+# sudo python3 -m pip install bluepy
+# 运行scan()时可能需要sudo权限
+sudo python3 send_ble.py
+```
+`send_ble`自行查看`scan()`和`send()`函数，`scan()`扫描周边所有蓝牙，`send()`里面会先通知设备开灯，然后5秒后，设备关灯，期间会多次读led
+状态。如果，基于该方案的学生，需要将`scan()`和`send()`结果打印信息保存(复制或截图)。
+
+`scan()`执行结果,类似下面输出: 
+
+> Device 5d:68:9b:a1:c7:64 (type=random) (RSSI=-80):  
+>   Flags: 1a   
+>   Manufacturer: 4c000512000000000000000001dccac994ce81844e00   
+> Device 5f:36:9a:77:e7:78 (type=random) (RSSI=-74):  
+>   Flags: 1a   
+>   Manufacturer: 4c00090813120aa24b061b5816080065bc5a27cfb5d6   
+> Device 7e:57:58:2e:48:d0 (type=public) (RSSI=-63):  
+>   Flags: 06   
+>   16b Service Data: f7fd01416710b51fa44fdeba0962e835e9d72d0000000003   
+>   Complete 16b Services: 0000fe78-0000-1000-8000-00805f9b34fb   
+>   Manufacturer: 650001c906   
+> Device 88:13:bf:0c:12:59 (type=public) (RSSI=-39):  
+>   Flags: 06   
+>   Complete Local Name: NimBLE GATT Example   
+
+`send()`执行结果,类似下面输出:
+
+> Target device 88:13:bf:0c:12:59 found, attempting to connect...  
+> Get Data: LED STATE(R): 0  
+> Data 'b'\x01'' written to characteristic.  
+> Get Data: LED STATE(R): 1  
+> Data 'b'\x00'' written to characteristic.  
+> Get Data: LED STATE(R): 0  
+> Disconnected from device.  
+
+`send()`错误结果，如下,多执行几次,多次不行，esp32 reset一下(**或者检查是否有其他设备连接ESP32的GATT服务器**):
+> Failed to connect or communicate with the device: Failed to connect to peripheral 88:13:bf:0c:12:59, addr type: public  
 
 #### (2) 案例代码解释
 ##### 2.1 Makefile
@@ -250,10 +296,15 @@ static int gatt_svr_chr_access_rw_demo(
 
 ### 正式实验
 
-更改`10_nimble_server/` `cfg.adv_itvl_ms`等参数，自定义一个服务，如图片下载等，最终记录不同参数对实时传输速度的影响。
+该环节代码处于`21_nimble_gatt_experiment`, 通过上面的案例，想必你们学会了如何开启nimble 蓝牙广播，如何创建自定义GATT服务，如何处理读写请求。本实验需要在实验二的基础上，额外搭建GATT服务器，实现用户(手机端或电脑端)可读设备预测的运动状态，控制设备端模型预测的阈值以及数据采集频率(间隙)等。具体有以下功能:
+1) 完善`21_nimble_gatt_experiment/ledcontroller.cpp`两个函数，这个直接拷贝你们实验一中写好的LED代码。
+2) 完善`21_nimble_gatt_experiment/main.cpp`多处代码, 实现多线程, 一:定期神经网络识别设备运动状态并打印结果, 二:led根据识别结果显示不同颜色, 可同实验一.注意，运行你实验二中你觉得最佳的模型。(`21_nimble_gatt_experiment/external_modules`需与实验二保持一致，也可自由发挥) 
+3) 搭建GATT服务器(需要换个蓝牙设备名)，实现蓝牙广播，创建多个可读写的服务或特性。用户可通过蓝牙获取设备当前预测的运动状态，调节设备端模型预测的阈值以及数据采集频率(间隙)、LED灯展示颜色等功能。
+4) 加分点: 自定义蓝牙MAC地址，多用户连接，在终端打印蓝牙连接交互过程中的信息(能体现nimble蓝牙连接理论过程即可)。
 
+只要实验要求的最终功能达到，代码如何实现(不管是自行开创，还是按模板进行)都无所谓。
 
-
+完成上述内容后，请撰写实验报告，录制结果视频，在截至时间前，在**学在浙大**上，上传报告和视频成果。
 
 
 #### 补充:
