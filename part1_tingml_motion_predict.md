@@ -150,11 +150,11 @@ Note：数据集越丰富，后续模型性能大概率越好。采集后，数�
 ![alt text](./figs/datasets.png)
 
 #### 02 模型创建、训练、测试、生成部署模型
-该环节请查看`12_tingml_gesture_predict/external_modules/gesture/train.ipynb`文件，该文件给出整个详细模型训练的参考案例.
+该环节请查看`12_tingml_gesture_predict_experiment/external_modules/gesture/train.ipynb`文件，该文件给出整个详细模型训练的参考案例.
 如何在`.ipynb`文件上运行，请自行上网搜索`conda``jupyter notebook`等相关内容，遇到麻烦，请及时联系助教。 
 
 #### 03 部署模型
-1) 数据获取。为节省展示空间，下面代码与实际代码存在差异，只为解释关键部分。`12_tingml_gesture_predict/main.cpp``get_imu_data`收集一个样本的MPU6050传感器数据，并调用模型做预测。需要注意`SAMPLES_PER_GESTURE`和`class_num`需要与训练时的参数对应。`class_num`对应label种类数，`SAMPLES_PER_GESTURE`代表每个样本需要连续多少份数据。调用`predict`函数得到最终结构，该函数第一个参数是样本第一个数据的地址，第二个参数是样本长度, 第三个参数表示只有概率大于`threshold`，预测结果可信, 第四个参数表示分类数量`class_num`。
+1) 数据获取。为节省展示空间，下面代码与实际代码存在差异，只为解释关键部分。`12_tingml_gesture_predict_experiment/main.cpp``get_imu_data`收集一个样本的MPU6050传感器数据，并调用模型做预测。需要注意`SAMPLES_PER_GESTURE`和`class_num`需要与训练时的参数对应。`class_num`对应label种类数，`SAMPLES_PER_GESTURE`代表每个样本需要连续多少份数据。调用`predict`函数得到最终结构，该函数第一个参数是样本第一个数据的地址，第二个参数是样本长度, 第三个参数表示只有概率大于`threshold`，预测结果可信, 第四个参数表示分类数量`class_num`。
 ```c++
 #define SAMPLES_PER_GESTURE (10)
 #define class_num (4)
@@ -190,14 +190,14 @@ void *_motion_thread(void *arg)
     }
 }
 ```
-2) 模型部署以推理。接下来，将详细介绍，`tflite-micro`库的使用。这里代码在`12_tingml_gesture_predict/external_modules/gesture/main_functions.cc`。头文件引入保持案例不变即可。`#include "blob/model.tflite.h"`导入前面训练好的模型,`model.tflite`，这里注意，在该文件同路径的Makefile文件，里面通过`BLOBS += model.tflite`添加模型，在编译的时候，模型参数也参与编译，在bin文件夹里面生成了`model.tflite.h`头文件，有兴趣的同学可去`bin/esp32-wroom-32/gesture/blobs/blob/model.tflite.h`文件查看内容，思考模型以什么形式存在。
+2) 模型部署以推理。接下来，将详细介绍，`tflite-micro`库的使用。这里代码在`12_tingml_gesture_predict_experiment/external_modules/gesture/main_functions.cc`。头文件引入保持案例不变即可。`#include "blob/model.tflite.h"`导入前面训练好的模型,`model.tflite`，这里注意，在该文件同路径的Makefile文件，里面通过`BLOBS += model.tflite`添加模型，在编译的时候，模型参数也参与编译，在bin文件夹里面生成了`model.tflite.h`头文件，有兴趣的同学可去`bin/esp32-wroom-32/gesture/blobs/blob/model.tflite.h`文件查看内容，思考模型以什么形式存在。
 `kTensorArenaSize`会给模型导入推理预留一定的空间，不可小于模型的需求。
 `model = tflite::GetModel(model_tflite);`为模型加载方式。
 
 ```c++
 
 #include "blob/model.tflite.h"
-// 12_tingml_gesture_predict/external_modules/gesture/main_functions.cc
+// 12_tingml_gesture_predict_experiment/external_modules/gesture/main_functions.cc
 // 类似Arduino方式，创建全局可访问变量
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
@@ -275,7 +275,7 @@ void setup()
 
 3) 模型创建导入已经结束，接下来是模型推理。首先, 每次推理需要拿到输入空间`input = interpreter->input(0);`和输出空间`output = interpreter->output(0);`开始的张量地址，并将输入复制到模型的输入空间；然后，执行模型推理`interpreter->Invoke();`；最后，拿到得到推理结果，这里分类模型拿到的是每个标签的概率，找到预测概率最高对应的标签，并查看其概率是否超过阈值。
 ```c++
-// 12_tingml_gesture_predict/external_modules/gesture/main_functions.cc
+// 12_tingml_gesture_predict_experiment/external_modules/gesture/main_functions.cc
 int predict(float *imu_data, int data_len, float threshold, int class_num){
     input = interpreter->input(0);
     output = interpreter->output(0);
@@ -303,7 +303,7 @@ int predict(float *imu_data, int data_len, float threshold, int class_num){
 假设你根据前面训练，已经得到训练好的模型了。按下面内容执行操作.
 ```bash
 cd ~/RIOT/
-cd examples/emnets_experiment/12_tingml_gesture_predict
+cd examples/emnets_experiment/12_tingml_gesture_predict_experiment
 esp_idf all
 make BOARD=esp32-wroom-32 flash term
 ```
@@ -320,9 +320,9 @@ make BOARD=esp32-wroom-32 flash term
 
 ### 正式实验: 基于神经网络进行设备运动状态识别
 
-该环节代码仍然处于`12_tingml_gesture_predict`，通过上面几个案例，想必你们已经会数据集收集、模型创建、数据集导入、模型训练、模型测试、模型生成部署以及最终的推理，本实验需要将这几部分结合，实现以下具体功能：
-1) 完善`12_tingml_gesture_predict/ledcontroller.cpp`两个函数，这个直接拷贝你们实验一时候写好的代码。
-2) 完善`12_tingml_gesture_predict/main.cpp`多处代码, 实现多线程, 一:定期神经网络识别设备运动状态并打印结果, 二:led根据识别结果显示不同颜色, 可同实验一.
+该环节代码仍然处于`12_tingml_gesture_predict_experiment`，通过上面几个案例，想必你们已经会数据集收集、模型创建、数据集导入、模型训练、模型测试、模型生成部署以及最终的推理，本实验需要将这几部分结合，实现以下具体功能：
+1) 完善`12_tingml_gesture_predict_experiment/ledcontroller.cpp`两个函数，这个直接拷贝你们实验一时候写好的代码。
+2) 完善`12_tingml_gesture_predict_experiment/main.cpp`多处代码, 实现多线程, 一:定期神经网络识别设备运动状态并打印结果, 二:led根据识别结果显示不同颜色, 可同实验一.
 3) 案例给出了MLP模型和CNN模型,请从模型训练,模型测试以及真实部署三个方面进行识别准确度性能对比.
 4) 自主设计一个运动状态识别模型(其他模型结构或者适当增大模型参数),要去比案例的CNN模型性能好.
 5) 加分点: 实现分辨更多运动状态，如X轴方向平移、Y轴方向平移等等; 给出不同模型更多角度的性能评价如推理时间开销(主机端测试时或者实际ESP32部署时推理开销); 模型创新度高; 计算出模型在ESP32部署时所需要的最小内存开销; 提交真实的视频成果(能有效展示设备运动状态识别情况).

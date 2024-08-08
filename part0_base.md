@@ -109,6 +109,8 @@ esp_idf all
 cd ~/RIOT/examples/emnets_experiment/01_threads_led/
 # 正常执行以下编译命令即可
 make BOARD=esp32-wroom-32 flash term
+# 注意每次烧写完，点击ESP32左侧reset按钮
+
 # 基于容器的编译链
 BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
    DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
@@ -392,9 +394,9 @@ void *_imu_thread(void *arg)
 
 ### 三、正式实验：IMU惯性传感器使用及LED展示
 
-该环节代码处于`03_threads_led_and_imu`，通过上面几个案例，想必你们已经会LEDRGB灯控制、多线程运行及通信、休眠、MPU6050传感器数据获取，本实验需要将这几部分结合，实现以下具体功能：
-1) 完善`03_threads_led_and_imu/ledcontroller.cpp`两个函数，实现RGB三引脚控制、实现至少可展示五种不同灯颜色。
-2) 完善`03_threads_led_and_imu/main.cpp`多处代码，实现双线程工作，一个线程用来灯控，另外一个线程用来去读取MPU6050传感器数据及数据处理。
+该环节代码处于`03_threads_led_and_imu_experiment`，通过上面几个案例，想必你们已经会LEDRGB灯控制、多线程运行及通信、休眠、MPU6050传感器数据获取，本实验需要将这几部分结合，实现以下具体功能：
+1) 完善`03_threads_led_and_imu_experiment/ledcontroller.cpp`两个函数，实现RGB三引脚控制、实现至少可展示五种不同灯颜色。
+2) 完善`03_threads_led_and_imu_experiment/main.cpp`多处代码，实现双线程工作，一个线程用来灯控，另外一个线程用来去读取MPU6050传感器数据及数据处理。
 3) 自行上网查询相关算法，实现根据MPU6050传感器数据,判断当前设备状态，如`水平静止`、`倾斜静止`、`旋转`、`平移`等多种状态。
 4) 展示结果为，一种设备运动状态对应一种LED灯，如`运动`时，LED灯为绿色；`旋转`时，LED灯为蓝色；`倾斜静止`时，LED灯为红色；`水平静止`时，LED灯熄灯。
 5) 加分点: 实现分辨更多运动状态，如X轴方向平移、Y轴方向平移等等; 实现LED RGB灯更多种颜色; 
