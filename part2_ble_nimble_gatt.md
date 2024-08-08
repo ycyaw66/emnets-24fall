@@ -19,12 +19,14 @@ make BOARD=esp32-wroom-32 flash term
 # 注意每次烧写完，点击ESP32左侧reset按钮
 ```
 完成上述操作后，终端串口会打印以下信息:
-> 2024-08-08 15:30:59,695 # main(): This is RIOT! (Version: 2024.10-devel-39-g340caa)  
-> 2024-08-08 15:30:59,698 # NimBLE GATT Server Example   
-> 2024-08-08 15:30:59,704 # LED Controller initialized with (RGB: GPIO26, GPIO25, GPIO27)  
-> 2024-08-08 15:30:59,706 # [LED_THREAD] WAIT  
-> 2024-08-08 15:30:59,706 # [MAIN] LED_PID: 6  
+> 2024-08-08 17:29:22,292 # main(): This is RIOT! (Version: 2024.10-devel-39-g340caa)  
+> 2024-08-08 17:29:22,294 # NimBLE GATT Server Example  
+> 2024-08-08 17:29:22,300 # LED Controller initialized with (RGB: GPIO26, GPIO25, GPIO27)  
+> 2024-08-08 17:29:22,302 # [LED_THREAD] WAIT  
+> 2024-08-08 17:29:22,303 # [MAIN] LED_PID: 6  
+> 2024-08-08 17:29:22,306 # Default MAC address: 88:13:BF:0C:12:59  
 
+同时打印默认蓝牙MAC地址，每个设备默认MAC地址不一样，案例这个ESP32设备显示MAC地址为`88:13:BF:0C:12:59`
 接下来需要用到手机或者电脑与之通信，不同手机系统的同学请看对应部分进行后续操作。
 ##### 基于安卓系统的手机 
 手机的操作系统属于Android, 请安装`20_nimble_gatt/nRFConnect_4_28_1.apk` APP。
@@ -47,7 +49,346 @@ make BOARD=esp32-wroom-32 flash term
 
 
 #### (2) 案例代码解释
+##### 2.1 Makefile
+```bash
+# 20_nimble_gatt/Makefile
+USEPKG += nimble
+USEMODULE += nimble_svc_gap
+USEMODULE += nimble_svc_gatt
+# Use automated advertising
+USEMODULE += nimble_autoadv
+CFLAGS += -DCONFIG_NIMBLE_AUTOADV_DEVICE_NAME='"NimBLE GATT Example"'
+CFLAGS += -DCONFIG_NIMBLE_AUTOADV_START_MANUALLY=1
+```
+`20_nimble_gatt/Makefile`
+1) nimble: 这是一个包含 NimBLE 核心库的模块。NimBLE 是一个开源的 BLE（Bluetooth Low Energy）协议栈，实现了 BLE 的基本功能，包括连接管理、数据传输、安全性等。
+2) nimble_svc_gap: 这个模块实现了 Generic Access Profile (GAP) 服务。GAP 是 BLE 协议栈的一部分，负责设备的发现、连接建立和连接维护等功能。使用这个模块可以管理 BLE 设备的可发现性和连接特性。如`NimBLE GATT Example`蓝牙名是通过该模块设置的。
+3) nimble_svc_gatt: 这个模块实现了 Generic Attribute Profile (GATT) 服务。GATT 定义了 BLE 设备之间如何交换数据。通过这个模块，可以定义服务和特征，用于在 BLE 设备之间传输数据。该案例用到最多的就是该模块。
+4) nimble_autoadv: 这个模块用于自动广播。BLE 设备通过广播信息来让其他设备发现自己。使用这个模块可以自动处理广播包的发送，简化开发过程。
+##### 2.2 main: #include, 头文件介绍
+```c++
+// 20_nimble_gatt/main.cpp
+#include "nimble_riot.h"
+#include "nimble_autoadv.h"
+#include "host/ble_hs.h"
+#include "host/util/util.h"
+#include "host/ble_gatt.h"
+#include "services/gap/ble_svc_gap.h"
+#include "services/gatt/ble_svc_gatt.h"
+```
+1) **nimble_riot.h**: 将 NimBLE 协议栈与 RIOT 操作系统集成起来。它提供了在 RIOT 中使用 NimBLE 所需的初始化和配置功能。
+2) **nimble_autoadv**: 包含了与自动广播相关的功能。
+3) **host/ble_hs.h**: 包含了 NimBLE 主机（host）堆栈的核心功能。它定义了 BLE 主机的主要接口和数据结构，管理 BLE 连接、GATT 服务、GAP 和其他 BLE 操作。
+4) **host/util/util.h**: 包含了主机堆栈中使用的实用函数和宏。它提供了各种辅助功能，如数据转换、内存操作等，支持 BLE 协议栈的实现。
+5) **host/ble_gatt.h**: 包含了与 Generic Attribute Profile (GATT) 相关的功能。GATT 定义了如何在 BLE 设备之间交换数据，提供了服务和特征的接口和数据结构。
+6) **services/gap/ble_svc_gap.h**: 包含了 Generic Access Profile (GAP) 服务的定义和实现。GAP 负责设备的发现、连接建立和连接维护等功能。
+7) **services/gatt/ble_svc_gatt.h**: 包含了 Generic Attribute Profile (GATT) 服务的定义和实现。它提供了创建和管理 GATT 服务和特征的接口，使 BLE 设备能够定义自己的数据结构和通信方式。
+
+这些头文件共同提供了在 RIOT 操作系统中使用 NimBLE 蓝牙协议栈的完整功能，从基础的协议栈初始化、广播处理到高层的服务定义和数据交换。有兴趣的同学可前去`~/RIOT/pkg/nimble/`以及`~/RIOT/build/pkg/nimble/nimble/`路径查看NimBLE 蓝牙协议栈的完整内容，里面蓝牙存在不少线程。
+
+##### 2.3 main: gatt 定义服务
+结构体放着，参考一下即可，不必深究。
+```c++
+// build/pkg/nimble/nimble/host/include/host/ble_uuid.h
+/** 128-bit UUID */
+typedef struct {
+    ble_uuid_t u;
+    uint8_t value[16];
+} ble_uuid128_t;
+
+```
+`ble_uuid128_t` 前面案例UUID，`u`代表UUID的类型，如32位，128位等，`value`就是案例显示的UUID内容。
+```c++
+// 20_nimble_gatt/main.cpp
+/* UUID = 1bce38b3-d137-48ff-a13e-033e14c7a335 */
+// 服务UUID，对应着上面图中的第三个服务UUID，注意UUID和最终外面访问到的是反过来的。
+static const ble_uuid128_t gatt_svr_svc_rw_demo_uuid
+        = {{128}, {0x15, 0xa3, 0xc7, 0x14, 0x3e, 0x03, 0x3e, 0xa1, 0xff,
+                0x48, 0x37, 0xd1, 0xb3, 0x38, 0xce, 0x1b}};
+// 服务UUID，对应着上面图中的第三个服务第一个特性的UUID，注意UUID和最终外面访问到的是反过来的。
+/* UUID = 35f28386-3070-4f3b-ba38-27507e991762 */
+static const ble_uuid128_t gatt_svr_chr_rw_demo_write_uuid
+        = {{128}, {0x62, 0x17, 0x99, 0x7e, 0x50, 0x27, 0x38, 0xba, 0x3b,
+                0x4f, 0x70, 0x30, 0x86, 0x83, 0xf2, 0x35}};
+// 服务UUID，对应着上面图中的第三个服务第二个特性的UUID，注意UUID和最终外面访问到的是反过来的。
+/* UUID = 16151413-1211-1009-0807-060504030201 */
+static const ble_uuid128_t gatt_svr_chr_rw_demo_readonly_uuid
+        = {{128}, {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+                0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16}};
+
+// 特性访问的对应自定义函数
+static int gatt_svr_chr_access_rw_demo(
+        uint16_t conn_handle, uint16_t attr_handle,
+        struct ble_gatt_access_ctxt *ctxt, void *arg);
+// -------------------------------------------------
+// 定义蓝牙服务
+static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
+    /*
+     * access_cb defines a callback for read and write access events on
+     * given characteristics
+     */
+    {
+        /* Service: Read/Write Demo */
+        .type = BLE_GATT_SVC_TYPE_PRIMARY,
+        .uuid = (ble_uuid_t*) &gatt_svr_svc_rw_demo_uuid.u,
+        .characteristics = (struct ble_gatt_chr_def[]) { {
+            /* Characteristic: Read/Write Demo write */
+            .uuid = (ble_uuid_t*) &gatt_svr_chr_rw_demo_write_uuid.u,
+            // 触发的函数，即用户点击后，服务会直接执行的函数。
+            .access_cb = gatt_svr_chr_access_rw_demo,
+            // 指定访问权限，可读可写
+            .flags = BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_WRITE,
+        }, {
+            /* Characteristic: Read/Write Demo read only */
+            .uuid = (ble_uuid_t*) &gatt_svr_chr_rw_demo_readonly_uuid.u,
+            .access_cb = gatt_svr_chr_access_rw_demo,
+            .flags = BLE_GATT_CHR_F_READ,
+        }, {
+            0, /* No more characteristics in this service */
+        }, }
+    },
+    {
+        0, /* No more services */
+    },
+};
+```
+
+服务的创建需要表明`type`, `uuid`, `characteristics`, 特性需要`uuid`, `access_cb`触发的自定义函数，`flags`访问权限。
+服务创建，参考上述模板即可，重点注意`uuid`, `access_cb`和`flags`，uuid随意自定义，不超过128bit。
+##### 2.4 main: GATT Server添加服务, 并广播工作。
+```c++
+// 20_nimble_gatt/main.cpp
+// 检查服务配置信息
+ble_gatts_count_cfg(gatt_svr_svcs);
+// 添加服务
+ble_gatts_add_svcs(gatt_svr_svcs);
+// 设置设备蓝牙名
+// CONFIG_NIMBLE_AUTOADV_DEVICE_NAME对应前面Makefile中的
+// CFLAGS += -DCONFIG_NIMBLE_AUTOADV_DEVICE_NAME='"NimBLE GATT Example"'
+ble_svc_gap_device_name_set(CONFIG_NIMBLE_AUTOADV_DEVICE_NAME);
+// GATT 服务器工作
+ble_gatts_start();
+// -------------------------------
+// 开始广播
+// void nimble_autoadv_start(ble_addr_t *addr);
+nimble_autoadv_start(NULL);
+// 停止广播
+nimble_autoadv_stop();
+```
+查看上述注释即可明白，基本不会有变化，需要留意一下，`nimble_autoadv_start`输入为`NULL`时，将采用默认蓝牙MAC地址，每个设备出厂时都有个独特的MAC物理地址，这里可以自定义MAC地址，查看格式，可自行修改蓝牙地址。(**自行思考下，MAC地址可变的好处是什么？**)
+```c++
+// build/pkg/nimble/nimble/include/nimble/ble.h
+typedef struct {
+    uint8_t type;
+    uint8_t val[6];
+} ble_addr_t;
+```
+##### 2.5 main: 特性访问函数
+```c++
+#define DEMO_BUFFER_SIZE 100
+#define STR_ANSWER_BUFFER_SIZE 100
+static char rm_demo_write_data[DEMO_BUFFER_SIZE] = "This characteristic is read- and writeable!";
+static char str_answer[STR_ANSWER_BUFFER_SIZE];
+static int gatt_svr_chr_access_rw_demo(
+        uint16_t conn_handle, uint16_t attr_handle,
+        struct ble_gatt_access_ctxt *ctxt, void *arg)
+{
+    (void) conn_handle;
+    (void) attr_handle;
+    (void) arg;
+    int rc = 0;
+    // 第一个特性，可读可写
+    ble_uuid_t* write_uuid = (ble_uuid_t*) &gatt_svr_chr_rw_demo_write_uuid.u;
+    // 第二个特性，只读
+    ble_uuid_t* readonly_uuid = (ble_uuid_t*) &gatt_svr_chr_rw_demo_readonly_uuid.u;
+    if (ble_uuid_cmp(ctxt->chr->uuid, write_uuid) == 0) {
+        // 判断操作类型，读写
+        switch (ctxt->op) {
+            case BLE_GATT_ACCESS_OP_READ_CHR:
+                /* send given data to the client */
+                rc = os_mbuf_append(ctxt->om, &rm_demo_write_data,
+                                    strlen(rm_demo_write_data));
+                break;
+            case BLE_GATT_ACCESS_OP_WRITE_CHR:
+                uint16_t om_len;
+                om_len = OS_MBUF_PKTLEN(ctxt->om);
+                /* read sent data */
+                rc = ble_hs_mbuf_to_flat(ctxt->om, &rm_demo_write_data,
+                                         sizeof(rm_demo_write_data), &om_len);
+                /* we need to null-terminate the received string */
+                rm_demo_write_data[om_len] = '\0';
+                // 根据rm_demo_write_data内容通知LED灯线程开关灯...
+                // ...
+                break;
+            default:
+                rc = 1;
+                break;
+        }
+        return rc;
+    }
+    else if (ble_uuid_cmp(ctxt->chr->uuid, readonly_uuid) == 0) {
+        if (ctxt->op == BLE_GATT_ACCESS_OP_READ_CHR) {
+            snprintf(str_answer, STR_ANSWER_BUFFER_SIZE, "LED STATE(R): %d", r_led_state);
+            rc = os_mbuf_append(ctxt->om, &str_answer, strlen(str_answer));
+            return rc;
+        }
+        return 0;
+    }
+    return 1;
+}
+```
+特性绑定的函数`gatt_svr_chr_access_rw_demo`对特性的读写内容进行处理，可保存用户写的数据，也可发送用户请求读的数据。
+上述函数参数只需要留意`struct ble_gatt_access_ctxt *ctxt`即可，其结构体可查看本页页面部分，记录gatt操作类型(op, 读写)、gatt访问数据(om, 从里面读，写里面去)，以及对应的特性定义如UUID。其余参数用不到。
+
+1) `ble_uuid_cmp(ctxt->chr->uuid, write_uuid) == 0`判断是否是第一个特性（可读可写），`(ble_uuid_cmp(ctxt->chr->uuid, readonly_uuid) == 0)`判断是否是第二个特性(只读)。
+2) 通过`ctxt->op`判断操作类型。
+3) `int os_mbuf_append(struct os_mbuf *om, const void *data,  uint16_t len);`把数据写入，发给用户。
+4) `uint16_t om_len = OS_MBUF_PKTLEN(ctxt->om);` 获取用户发来数据长度
+5) `int ble_hs_mbuf_to_flat(const struct os_mbuf *om, void *flat, uint16_t max_len, uint16_t *out_copy_len);`用户发来的数据读出，拷贝到指定地点。out_copy_len 对应om_len，注意指针，`rm_demo_write_data[om_len] = '\0';`在数据末添加结束符号。
+6) `int snprintf(char *str, size_t size, const char *format, ...);` 是一个 C 语言标准库函数，用于格式化输出字符串，并将结果写入到指定的缓冲区，与 `sprintf()` 不同的是，`snprintf()` 会限制输出的字符数，避免缓冲区溢出。
 
 
-#### 实验要求
+### 正式实验
+
 更改`10_nimble_server/` `cfg.adv_itvl_ms`等参数，自定义一个服务，如图片下载等，最终记录不同参数对实时传输速度的影响。
+
+
+
+
+
+#### 补充:
+1) 上面用到的部分结构体，内容并不重要，放这，看看就行。
+```c++
+
+
+// build/pkg/nimble/nimble/host/include/host/ble_gatt.h
+struct ble_gatt_svc_def {
+    /**
+     * One of the following:
+     *     o BLE_GATT_SVC_TYPE_PRIMARY - primary service
+     *     o BLE_GATT_SVC_TYPE_SECONDARY - secondary service
+     *     o 0 - No more services in this array.
+     */
+    uint8_t type;
+
+    /**
+     * Pointer to service UUID; use BLE_UUIDxx_DECLARE macros to declare
+     * proper UUID; NULL if there are no more characteristics in the service.
+     */
+    const ble_uuid_t *uuid;
+
+    /**
+     * Array of pointers to other service definitions.  These services are
+     * reported as "included services" during service discovery.  Terminate the
+     * array with NULL.
+     */
+    const struct ble_gatt_svc_def **includes;
+
+    /**
+     * Array of characteristic definitions corresponding to characteristics
+     * belonging to this service.
+     */
+    const struct ble_gatt_chr_def *characteristics;
+};
+
+struct ble_gatt_chr_def {
+    /**
+     * Pointer to characteristic UUID; use BLE_UUIDxx_DECLARE macros to declare
+     * proper UUID; NULL if there are no more characteristics in the service.
+     */
+    const ble_uuid_t *uuid;
+
+    /**
+     * Callback that gets executed when this characteristic is read or
+     * written.
+     */
+    ble_gatt_access_fn *access_cb;
+
+    /** Optional argument for callback. */
+    void *arg;
+
+    /**
+     * Array of this characteristic's descriptors.  NULL if no descriptors.
+     * Do not include CCCD; it gets added automatically if this
+     * characteristic's notify or indicate flag is set.
+     */
+    struct ble_gatt_dsc_def *descriptors;
+
+    /** Specifies the set of permitted operations for this characteristic. */
+    ble_gatt_chr_flags flags;
+
+    /** Specifies minimum required key size to access this characteristic. */
+    uint8_t min_key_size;
+
+    /**
+     * At registration time, this is filled in with the characteristic's value
+     * attribute handle.
+     */
+    uint16_t *val_handle;
+};
+
+struct ble_gatt_access_ctxt {
+    /**
+     * Indicates the gatt operation being performed.  This is equal to one of
+     * the following values:
+     *     o  BLE_GATT_ACCESS_OP_READ_CHR
+     *     o  BLE_GATT_ACCESS_OP_WRITE_CHR
+     *     o  BLE_GATT_ACCESS_OP_READ_DSC
+     *     o  BLE_GATT_ACCESS_OP_WRITE_DSC
+     */
+    uint8_t op;
+
+    /**
+     * A container for the GATT access data.
+     *     o For reads: The application populates this with the value of the
+     *       characteristic or descriptor being read.
+     *     o For writes: This is already populated with the value being written
+     *       by the peer.  If the application wishes to retain this mbuf for
+     *       later use, the access callback must set this pointer to NULL to
+     *       prevent the stack from freeing it.
+     */
+    struct os_mbuf *om;
+
+    /**
+     * The GATT operation being performed dictates which field in this union is
+     * valid.  If a characteristic is being accessed, the chr field is valid.
+     * Otherwise a descriptor is being accessed, in which case the dsc field
+     * is valid.
+     */
+    union {
+        /**
+         * The characteristic definition corresponding to the characteristic
+         * being accessed.  This is what the app registered at startup.
+         */
+        const struct ble_gatt_chr_def *chr;
+
+        /**
+         * The descriptor definition corresponding to the descriptor being
+         * accessed.  This is what the app registered at startup.
+         */
+        const struct ble_gatt_dsc_def *dsc;
+    };
+};
+```
+
+
+2) flags服务
+```c++
+// build/pkg/nimble/nimble/host/include/host/ble_gatt.h
+#define BLE_GATT_CHR_F_BROADCAST                        0x0001
+#define BLE_GATT_CHR_F_READ                             0x0002
+#define BLE_GATT_CHR_F_WRITE_NO_RSP                     0x0004
+#define BLE_GATT_CHR_F_WRITE                            0x0008
+#define BLE_GATT_CHR_F_NOTIFY                           0x0010
+#define BLE_GATT_CHR_F_INDICATE                         0x0020
+#define BLE_GATT_CHR_F_AUTH_SIGN_WRITE                  0x0040
+#define BLE_GATT_CHR_F_RELIABLE_WRITE                   0x0080
+#define BLE_GATT_CHR_F_AUX_WRITE                        0x0100
+#define BLE_GATT_CHR_F_READ_ENC                         0x0200
+#define BLE_GATT_CHR_F_READ_AUTHEN                      0x0400
+#define BLE_GATT_CHR_F_READ_AUTHOR                      0x0800
+#define BLE_GATT_CHR_F_WRITE_ENC                        0x1000
+#define BLE_GATT_CHR_F_WRITE_AUTHEN                     0x2000
+#define BLE_GATT_CHR_F_WRITE_AUTHOR                     0x4000
+```
+

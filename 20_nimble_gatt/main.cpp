@@ -260,6 +260,16 @@ int main(void)
     /* reload the GATT server to link our added services */
     ble_gatts_start();
 
+    // 获取蓝牙设备的默认 MAC 地址
+    uint8_t own_addr_type;
+    uint8_t own_addr[6];
+    ble_hs_id_infer_auto(0, &own_addr_type);
+    ble_hs_id_copy_addr(own_addr_type, own_addr, NULL);
+
+    // 打印 MAC 地址
+    LOG_INFO("Default MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
+             own_addr[5], own_addr[4], own_addr[3],
+             own_addr[2], own_addr[1], own_addr[0]);
     /* start to advertise this node */
     nimble_autoadv_start(NULL);
 
