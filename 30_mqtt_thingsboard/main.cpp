@@ -206,7 +206,7 @@ int mqtt_pub(void)
     message.retained = IS_RETAINED_MSG;
     led_state = !led_state;
     char json[100];  
-    sprintf(json, "{led_state:%d}", led_state);
+    snprintf(json, 100, "{r_led_state:%d}", led_state);
     printf("[Send] Message:%s\n", json);
     message.payload = json;
     message.payloadlen = strlen((char *)message.payload);
@@ -288,15 +288,26 @@ static int _cmd_send(int argc, char **argv)
 {
     (void) argc;
     (void) argv;
+
     for (int i = 0; i < 10; ++i)
     {
+        msg_t msg;
+        msg.type = led_state == 0 ? LED_MSG_TYPE_NONE : LED_MSG_TYPE_RED;
+        if (msg_send(&msg, _led_pid) <= 0){
+            printf("[_cmd_send]: possibly lost interrupt.\n");
+        }
+        else{
+            printf("[_cmd_send]: Successfully set interrupt.\n");
+        }
         mqtt_connect();
         mqtt_pub();
         mqtt_disconnect();
-        xtimer_msleep(500);
+        delay_ms(2000);
     }
     return 0;
 }
+
+
 void send(void)
 {
     mqtt_connect();
@@ -344,8 +355,6 @@ int main(void)
     {
         printf("[MAIN] LED_PID: %d\n", _led_pid);
     }
-    // _main_pid = sched_active_pid();
-    // printf("[main]: pid: %d\n", _main_pid);
     msg_t msg_test;
     msg_test.type = LED_MSG_TYPE_RED;
     if (msg_send(&msg_test, _led_pid) <= 0){
@@ -354,13 +363,14 @@ int main(void)
     else{
         printf("[main]: Successfully set interrupt.\n");
     }
-    // while(1)
-    // {
-    //     send();
-    //     xtimer_msleep(500);
-    // }
-
+    // waiting for get IP 
+    while(mqtt_connect() < 0)
+    {
+        delay_ms(1500);
+    }
+    mqtt_disconnect();
     char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
+
     return 0;
 }

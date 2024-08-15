@@ -1,8 +1,8 @@
 APPLICATION = paho-mqtt-example
 
 # If no BOARD is found in the environment, use this default:
-BOARD ?= esp32s3-devkit
-# BOARD ?= esp32-wroom-32
+# BOARD ?= esp32s3-devkit
+BOARD ?= esp32-wroom-32
 # 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../../..

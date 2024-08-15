@@ -209,7 +209,7 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 具体内容请参阅[part1_tingml_motion_predict.md](./part1_tingml_motion_predict.md)以获取详细信息。
 
 
-### 4.3 BLE nimble GATT 通信
+### 4.3 BLE nimble GATT 服务器
 本部分实验将深入探讨使用BLE nimble库实现通用属性配置文件（GATT）通信。GATT是BLE协议栈中用于设备服务和特性管理的架构，它支持设备间的数据交互。通过本实验，学生将学习如何定义、配置和使用GATT服务和特性，以实现复杂的数据交互和设备控制功能。
 
 #### 实验目标：
@@ -219,24 +219,13 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 - 实现一个能够通过GATT服务交换数据, 获取并改变设备信息的BLE设备。
 具体内容请参阅[part2_ble_nimble_gatt.md](./part2_ble_nimble_gatt.md)以获取详细信息。
 
-### 4.3 MQTT Thingsboard
+### 4.4 设备与云平台： 基于MQTT的ThingsBoards物联网设备管理
 
-基于MQTT的ThingsBoard物联网设备管理实验采取MQTT的方式实现ESP32连接ThingsBoard平台，着眼于ThingsBoard平台搭建和使用、ESP32与ThingsBoard基于MQTT协议通信、MPU6050传感器数据上传。
+在最终实验中，我们将在前面所有实验的基础上，深入探讨物联网云平台和MQTT协议，基于开源的ThingsBoard项目搭建私有化物联网平台，并采取MQTT的方式实现ESP32连接ThingsBoard平台，着眼于ThingsBoard平台搭建和使用、ESP32与ThingsBoard基于MQTT协议通信、设备数据上传，并要求保留NIMBLE GATT服务。
 #### 实验目标:
 
 - 理解MQTT协议，包结构。
-- 学会使用ThingsBoards平台包括不限于数据图形化。
-- 实现物联网设备数据定期上传。
-具体内容请参阅[part2_mqtt_thingsboard.md](./part2_mqtt_thingsboard.md)以获取详细信息。
-
-### 4.4 TinyML
-
-在最终实验中，我们将整合前面所有实验，利用TinyML实现ESP32设备的姿态识别。通过训练和部署轻量级的机器学习模型，判断设备的当前运动状态。
-
-#### 实验目标：
-
-- 了解TinyML的基本概念及其在嵌入式设备上的应用。
-- 掌握模型训练、优化和部署的基本流程。
-- 实现基于TinyML的姿态识别系统，判断ESP32设备的运动状态。
-
-具体内容请参阅[part3_tingml_motion_predict.md](./part3_tingml_motion_predict.md)以获取详细信息。
+- 学会使用ThingsBoards平台包括不限于数据图形化以及规则引擎。
+- 实现物联网设备数据(设备原始数据、设备预测状态结果)定期上传。
+- NIMBLE GATT额外控制上传频率。
+具体内容请参阅[part3_mqtt_thingsboard.md](./part3_mqtt_thingsboard.md)以获取详细信息。

@@ -1,11 +1,12 @@
-## 实验三： 基于MQTT的ThingsBoards物联网设备管理
+## 实验四： 设备与云平台：基于MQTT的ThingsBoards物联网设备管理
 ThingsBoard是用于数据收集、处理、可视化和设备管理的开源物联网平台。它通过行业标准的物联网协议：MQTT、CoAP、SNMP、LWM2M、Modbus、OPC UA和HTTP实现设备连接并支持私有云和本地部署；ThingsBoard具有弹性伸缩、高容错性和性能极致的特点保证永远不会丢失数据。本次实验采取MQTT的方式实现ESP32连接ThingsBoard平台。需要在电脑端完成ThingsBoard的安装和配置，实现ESP32连接平台并数据上传。
 
 ### 实验目标:
 
 - 理解MQTT协议，包结构。
-- 学会使用ThingsBoards平台包括不限于数据图形化。
-- 实现物联网设备数据定期上传。
+- 学会使用ThingsBoards平台包括不限于数据图形化以及规则引擎。
+- 实现物联网设备数据(设备原始数据、设备预测状态结果)定期上传。
+- 保留NIMBLE GATT服务器，且额外可控制数据上云频率。
 
 
 ### 一、ThingsBoard平台搭建
@@ -150,7 +151,7 @@ sudo service thingsboard start
 - System Administrator: sysadmin@thingsboard.org / sysadmin
 - Tenant Administrator: tenant@thingsboard.org / tenant
 - Customer User: customer@thingsboard.org / customer
-
+> 如果本地无法搭建，可使用http://10.214.131.103:8080/.
 <div style="text-align: center;">
   <figure>
     <img src="./figs/tb_login.jpg" alt="thingsboard_login" width="300" height="300">
@@ -204,7 +205,7 @@ mosquitto_pub -d -q 1 -h localhost -p 1883 -t v1/devices/me/telemetry -i "esp32_
 ```
 - -d: 显示日志
 - -q: Quality of service level
-- -h: 主机IP, 如果是其他设备访问，需要更改为真实的IP
+- -h: 主机IP, 如果是其他设备访问，需要更改为真实的IP(如`10.214.131.103`)
 - -p: MQTT 端口，这里默认是1883
 - -t: mqtt topic to publish to, 比如v1/devices/me/telemetry, v1/devices/me/attributes
 - -i：前面定义的Client ID
@@ -223,7 +224,7 @@ Client esp32_test sending DISCONNECT
 ### 四、ESP32连接ThingsBoard官网案例
 
 ```bash
-cd ~/RIOT/
+cd ~/RIOT/examples/emnets_experiment/30_mqtt_thingsboard
 # sudo chmod 777 /dev/ttyUSB*
 esp_idf all
 make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
