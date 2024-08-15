@@ -8,8 +8,8 @@ BOARD ?= esp32-wroom-32
 RIOTBASE ?= $(CURDIR)/../../..
 
 # Include NimBLE
-FEATURES_REQlsUIRED = periph_i2c
-FEATURES_OPTIONAL = periph_i2c_reconfigure
+FEATURES_REQUIRED += periph_i2c
+FEATURES_OPTIONAL += periph_i2c_reconfigure
 
 USEPKG += nimble
 USEMODULE += nimble_svc_gap

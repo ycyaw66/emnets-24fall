@@ -28,10 +28,9 @@
 #include "mutex.h"
 #include "paho_mqtt.h"
 #include "MQTTClient.h"
-#include <xtimer.h>
+#include "xtimer.h"
 #include <string>
-#include "mpu6050.h"
-#include "blink.h"
+#include "ledcontroller.hh"
 
 using namespace std;
 
@@ -45,11 +44,11 @@ static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
 string DEFAULT_MQTT_CLIENT_ID = "esp32_test";
 string DEFAULT_MQTT_USER = "esp32";
 string DEFAULT_MQTT_PWD = "esp32";
-string DEFAULT_IPV6 = "fe80::125:3159:d478:19e9";
+// Please enter the IP of the computer on which you have ThingsBoard installed.
 string DEFAULT_IPV4 = "192.168.31.229";
 string DEFAULT_TOPIC = "v1/devices/me/telemetry";
 
-MPU6050 mpu;
+
 
 /**
  * @brief Default MQTT port
@@ -76,17 +75,59 @@ static MQTTClient client;
 static Network network;
 static int topic_cnt = 0;
 static char _topic_to_subscribe[MAX_TOPICS][MAX_LEN_TOPIC];
+static int led_state;
+#define THREAD_STACKSIZE        (THREAD_STACKSIZE_IDLE)
 
-struct Mpu_data {
-    int16_t ax;
-    int16_t ay;
-    int16_t az;
-    int16_t gx;
-    int16_t gy;
-    int16_t gz;
-    uint8_t s_led_state;
-};
-Mpu_data mpu_data; 
+static char stack_for_led_thread[THREAD_STACKSIZE];
+#define LED_MSG_TYPE_ISR     (0x3456)
+#define LED_MSG_TYPE_RED     (0x3111)
+#define LED_MSG_TYPE_NONE    (0x3110)
+#define LED_GPIO_R GPIO26
+#define LED_GPIO_G GPIO25
+#define LED_GPIO_B GPIO27
+// the pid of led thread
+static kernel_pid_t _led_pid;
+static kernel_pid_t _main_pid;
+
+void delay_ms(uint32_t sleep_ms)
+{
+    ztimer_sleep(ZTIMER_USEC, sleep_ms * US_PER_MS);
+    return;
+}
+
+void *_led_thread(void *arg)
+{
+    (void) arg;
+    // init led controller
+    LEDController led(LED_GPIO_R, LED_GPIO_G, LED_GPIO_B);
+    msg_t msg;
+    // Wait for the message from main thread
+    msg_receive(&msg);
+    printf("[LED_THREAD] main Sender_PID: %d\n", msg.sender_pid);
+    while(1){
+        printf("[LED_THREAD] WAIT\n");
+        msg_t msg;
+        // Wait for the message from other thread
+        msg_receive(&msg);
+        _main_pid = msg.sender_pid;
+        printf("[LED_THREAD] Sender_PID: %d\n", msg.sender_pid);
+
+        if (msg.type == LED_MSG_TYPE_NONE)
+        {
+            // TURN ON LIGHT
+            led.change_led_color(0);
+            printf("[LED_THREAD]: LED TURN OFF!!\n");
+        }
+        else if (msg.type == LED_MSG_TYPE_RED)
+        {
+            // TURN OFF LIGHT
+            led.change_led_color(1);
+            printf("[LED_THREAD]: LED TURN ON!!\n");
+        }
+    }
+    return NULL;
+}
+
 static unsigned get_qos(const char *str)
 {
     int qos = atoi(str);
@@ -163,13 +204,10 @@ int mqtt_pub(void)
     MQTTMessage message;
     message.qos = qos;
     message.retained = IS_RETAINED_MSG;
-    s_led_state = !s_led_state;
-    mpu.getMotion6(&mpu_data.ax, &mpu_data.ay, &mpu_data.az, &mpu_data.gx, &mpu_data.gy, &mpu_data.gz);
-    mpu_data.s_led_state = s_led_state;
-    char json[200];  
-    sprintf(json, "{ax:%d, ay:%d, az:%d, gx:%d, gy:%d, gz:%d, led_state:%d}", mpu_data.ax, mpu_data.ay, mpu_data.az, mpu_data.gx, mpu_data.gy, mpu_data.gz, mpu_data.s_led_state);
+    led_state = !led_state;
+    char json[100];  
+    sprintf(json, "{led_state:%d}", led_state);
     printf("[Send] Message:%s\n", json);
-    blink_led();
     message.payload = json;
     message.payloadlen = strlen((char *)message.payload);
 
@@ -284,26 +322,43 @@ int main(void)
     }
 #ifdef MODULE_LWIP
     /* let LWIP initialize */
-    ztimer_sleep(ZTIMER_MSEC, 1 * MS_PER_SEC);
+    delay_ms(10);
 #endif
 
     NetworkInit(&network);
-
     MQTTClientInit(&client, &network, COMMAND_TIMEOUT_MS, buf, BUF_SIZE,
                    readbuf,
                    BUF_SIZE);
     printf("Running mqtt paho example. Type help for commands info\n");
 
-    mpu.initialize();
-    configure_led();
-    blink_faster(10, 100);
-
     MQTTStartTask(&client);
-    while(1)
-    {
-        send();
-        xtimer_msleep(500);
+    // create led thread
+    _led_pid = thread_create(stack_for_led_thread, sizeof(stack_for_led_thread), THREAD_PRIORITY_MAIN - 2,
+                            THREAD_CREATE_STACKTEST, _led_thread, NULL,
+                            "led");
+    if (_led_pid <= KERNEL_PID_UNDEF) {
+        printf("[MAIN] Creation of receiver thread failed\n");
+        return 1;
     }
+    else
+    {
+        printf("[MAIN] LED_PID: %d\n", _led_pid);
+    }
+    // _main_pid = sched_active_pid();
+    // printf("[main]: pid: %d\n", _main_pid);
+    msg_t msg_test;
+    msg_test.type = LED_MSG_TYPE_RED;
+    if (msg_send(&msg_test, _led_pid) <= 0){
+        printf("[main]: possibly lost interrupt.\n");
+    }
+    else{
+        printf("[main]: Successfully set interrupt.\n");
+    }
+    // while(1)
+    // {
+    //     send();
+    //     xtimer_msleep(500);
+    // }
 
     char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);

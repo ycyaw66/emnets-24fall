@@ -256,7 +256,35 @@ kernel_pid_t thread_create(char *stack, int stacksize, uint8_t priority,
                            const char *name);
 ```
 
-#### (4) 补充:
+#### (4) Makefile编写
+```makefile
+# name of your application
+APPLICATION = mThreads
+
+BOARD ?= esp32-wroom-32
+
+# This has to be the absolute path to the RIOT base directory:
+RIOTBASE ?= $(CURDIR)/../../..
+
+# Comment this out to disable code in RIOT that does safety checking
+# which is not needed in a production environment but helps in the
+# development process:
+DEVELHELP ?= 1
+USEMODULE += shell_cmds_default
+USEMODULE += ztimer
+USEMODULE += xtimer
+USEMODULE += cpp
+# Change this to 0 show compiler invocation lines by default:
+QUIET ?= 1
+
+# Use a peripheral timer for the delay, if available
+FEATURES_OPTIONAL += periph_timer
+
+include $(RIOTBASE)/Makefile.include
+```
+Makefile 文件`APPLICATION`指定生成应用名， `BOARD`代表开发板型号，可编译时指定，`USEMODULE`指定需要添加的模块，这里用到`ztimer`和`cpp`模块(RIOT OS的特性，模块化开发，按需导入), `FEATURES_OPTIONAL` 指明使用一个外围设备计时器，其余保持默认即可。
+
+#### (5) 补充:
 1. 引脚模式:`int gpio_init(gpio_t pin, gpio_mode_t mode);` 初始化GPIO引脚(如`GPIO12`)的工作模式，目前支持6种工作模式，具体参考下面内容，本实验只需要通过输出电压来控制LED灯，因此设置为`GPIO_OUT`即可。
 ```c++
 typedef enum {

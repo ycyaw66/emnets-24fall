@@ -293,6 +293,7 @@ static int gatt_svr_chr_access_rw_demo(
 5) `int ble_hs_mbuf_to_flat(const struct os_mbuf *om, void *flat, uint16_t max_len, uint16_t *out_copy_len);`用户发来的数据读出，拷贝到指定地点。out_copy_len 对应om_len，注意指针，`rm_demo_write_data[om_len] = '\0';`在数据末添加结束符号。
 6) `int snprintf(char *str, size_t size, const char *format, ...);` 是一个 C 语言标准库函数，用于格式化输出字符串，并将结果写入到指定的缓冲区，与 `sprintf()` 不同的是，`snprintf()` 会限制输出的字符数，避免缓冲区溢出。
 
+7) **最容易出问题的点:** 如果用户端点击读取，没有信息，**请注意函数的return 值**，NIMBLE会根据返回是否为0，判断是否可以发送等操作。虽然不影响用户写入操作，但是如果不小心在用户读取的方法路径返回1，那么设备收到读取请求后，数据存在待发缓存空间里，但是不会真实发送。那么**只要写入缓存空间和读取缓存空间成功，rc都为0**，表示读写操作成功，之后再**return rc**告诉设备可以网络传输了。
 
 ### 正式实验
 

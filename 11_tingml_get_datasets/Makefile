@@ -20,6 +20,6 @@ QUIET ?= 1
 
 # Use a peripheral timer for the delay, if available
 FEATURES_OPTIONAL += periph_timer
-FEATURES_REQlsUIRED = periph_i2c
-FEATURES_OPTIONAL = periph_i2c_reconfigure
+FEATURES_REQUIRED += periph_i2c
+FEATURES_OPTIONAL += periph_i2c_reconfigure
 include $(RIOTBASE)/Makefile.include

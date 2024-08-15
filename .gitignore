@@ -62,3 +62,8 @@ apps/
 *.tflite
 *.h5
 *.npy
+04_experiment_answer/
+04_*/
+13_experiment_answer/
+22_experiment_answer/
+22_experiment_answer/

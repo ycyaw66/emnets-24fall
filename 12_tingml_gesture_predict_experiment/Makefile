@@ -10,8 +10,8 @@ USEPKG += tflite-micro
 DISABLE_MODULE += cortexm_fpu
 USEMODULE += gesture
 FEATURES_REQUIRED += cpp
-FEATURES_REQlsUIRED = periph_i2c
-FEATURES_OPTIONAL = periph_i2c_reconfigure
+FEATURES_REQUIRED += periph_i2c
+FEATURES_OPTIONAL += periph_i2c_reconfigure
 EXTERNAL_MODULE_DIRS += external_modules
 
 

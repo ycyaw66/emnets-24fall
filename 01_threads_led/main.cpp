@@ -33,7 +33,7 @@ void *_led_thread(void *arg)
     while(1){
         printf("[LED_THREAD] WAIT\n");
         msg_t msg;
-        // Wait for the message from led thread
+        // Wait for the message from OTHER thread
         msg_receive(&msg);
         if (msg.type == LED_MSG_TYPE_NONE)
         {
