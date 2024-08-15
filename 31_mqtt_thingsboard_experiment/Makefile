@@ -1,9 +1,20 @@
 APPLICATION = paho-mqtt-example
 
 # If no BOARD is found in the environment, use this default:
-BOARD ?= esp32s3-devkit
-# BOARD ?= esp32-wroom-32
-# 
+# BOARD ?= esp32s3-devkit
+BOARD ?= esp32-wroom-32
+# TensorFlow-Lite crashes on M4/M7 CPUs when FPU is enabled, so disable it by
+# default for now
+DISABLE_MODULE += cortexm_fpu
+USEPKG += tflite-micro
+USEPKG += nimble
+# Include NimBLE
+FEATURES_REQUIRED += periph_i2c
+FEATURES_OPTIONAL += periph_i2c_reconfigure
+EXTERNAL_MODULE_DIRS += external_modules
+USEMODULE += gesture
+USEMODULE += nimble_svc_gap
+USEMODULE += nimble_svc_gatt
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../../..
 
@@ -17,11 +28,15 @@ QUIET ?= 1
 
 WIFI_SSID ?= "EmNets-301"
 WIFI_PASS ?= "eagle402"
+# DEVICE NAME 也可自定义
+CFLAGS += -DCONFIG_NIMBLE_AUTOADV_DEVICE_NAME='"NimBLE GATT Example"'
+CFLAGS += -DCONFIG_NIMBLE_AUTOADV_START_MANUALLY=1
 
 # use ESP WiFi in station mode as network interface
 USEMODULE += esp_wifi
 USEMODULE += cpp
 USEMODULE += periph_i2c
+USEMODULE += ztimer
 
 # Optionally include remoteDNS support. This includes resolution of names at an
 # upstream DNS server and the handling of RDNSS options in Router Advertisements
@@ -43,6 +58,7 @@ USEMODULE += shell_cmds_default
 USEMODULE += ps
 USEMODULE += netdev_default
 USEPKG += paho-mqtt
+USEMODULE += shell_cmd_i2c_scan
 
 # paho-mqtt depends on TCP support, choose which stacks you want
 GNRC_IPV6 ?= 0

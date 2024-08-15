@@ -517,29 +517,16 @@ esp32 终端最终会打印类似以下的信息。
 
 ![](figs/mqtt/led_state.mp4)
 
+3) 添加规则引擎
 
 
-### 五、实验内容
-通过前面案例，不难发送我门发送数据需要以`{}`json字符串数据格式发送，同时将案例转化为CPP的形式，一些基础代码也需要修改，请在`20_mqtt_thingsboard_custom/`文件夹实现以下功能，参考同文件夹下的`mqtt_thingsboard.cpp`和`mqtt_thingsboard.hh`对应位置的注释要求，实现mqtt与thingsboard的连接要求，数据上传，连接断开等功能。
+### 五、正式实验: 设备数据上云且可视化展示
+该环节代码处于`31_mqtt_thingsboard_experiment`,通过前面案例，想必你们已经学会如何使用MQTT将数据上传到Thingsboard云平台以及可视化显示。本实验需要在之前的所有实验基础上，实现以下具体功能:
+1) 前面实验要求，请查看实验三的报告。
+2) 每隔mqtt_interval_ms(如，默认5s)，数据(MPU6050传感器最近一次数据，设备最近一次姿态识别结果，LED灯当前R,G,B状态)数据上云
+3) 在第二点要求下，三个可视化: 一: 6轴数据， 二: 设备姿态，三: LED灯R，G，B状态。
+4) NIMBLE GATT服务器原先功能不变，添加修改和读取mqtt_interval_ms的功能(用户可读取，修改设备上云时间间隔)。
+5) 加分点: 添加规则引擎，(1) 根据R,G,B生成一个RGB代码如(FF0000), (2) 设备处于倾斜状态，触发警告，等其他功能。
 
-
-同时修改同目录下的`main.cpp`文件，补充`void *_publish_thread(void *arg)`函数，实现MPU6050数据定期上传。
-**Note:** 一些宏定义，WIFI IP等需要修改，可根据各自喜好修改包括不限于上述提到的所有内容。
-注意ledcontroller的文件需要替换成前面实验各自对应的文件。
-```bash
-esp_idf all
-cd ~/RIOT/
-# sudo chmod 777 /dev/ttyUSB*
-make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
- WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \
- flash term -C examples/emnets_experiment/20_mqtt_thingsboard_custom/
-
-# 基于容器的方法(esp32工具链)
-BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
-DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
-make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
-    WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \
-    flash term -C examples/emnets_experiment/20_mqtt_thingsboard_custom/
-```
-
-建议自行查看`MQTTPacket_connectData`、`MQTTClient`、`Network`等结构体以及对应的函数。
+完成上述内容后，请撰写实验报告，请录制结果视频，在截至时间前，在**学在浙大**上，上传报告。
+**注意**：该实验是最后一个实验，与全部实验挂钩，后续可能需要涉及线下展示，在整个实验占大比分，请保持随时能复刻你实验结果的状态。
