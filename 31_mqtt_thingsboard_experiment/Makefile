@@ -1,4 +1,4 @@
-APPLICATION = paho-mqtt-example
+APPLICATION = final_project
 
 # If no BOARD is found in the environment, use this default:
 # BOARD ?= esp32s3-devkit
@@ -15,6 +15,8 @@ EXTERNAL_MODULE_DIRS += external_modules
 USEMODULE += gesture
 USEMODULE += nimble_svc_gap
 USEMODULE += nimble_svc_gatt
+USEMODULE += nimble_autoadv
+
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../../..
 

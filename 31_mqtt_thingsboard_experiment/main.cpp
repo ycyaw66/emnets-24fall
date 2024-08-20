@@ -92,8 +92,7 @@ string DEFAULT_TOPIC = "v1/devices/me/telemetry";
 static MQTTClient client;
 static Network network;
 static int topic_cnt = 0;
-static char _topic_to_subscribe[MAX_TOPICS][MAX_LEN_TOPIC];
-static int led_state;
+// static int led_state;
 
 #define LED_MSG_TYPE_ISR     (0x3456)
 #define LED_MSG_TYPE_RED     (0x3111)
@@ -109,7 +108,7 @@ static char stack_for_led_thread[THREAD_STACKSIZE];
 static char stack_for_motion_thread[THREAD_STACKSIZE];
 // the pid of led thread
 static kernel_pid_t _led_pid;
-static kernel_pid_t _main_pid;
+// static kernel_pid_t _main_pid;
 static kernel_pid_t _motion_pid;
 int mqtt_interval_ms = 5000;
 struct MPU6050Data
@@ -141,6 +140,7 @@ void *_motion_thread(void *arg)
 {
     (void) arg;
     // input your code
+    return NULL;
 }
 
 // input your code, 自定义想要的UUID
@@ -186,31 +186,12 @@ static int gatt_svr_chr_access_rw_demo(
     (void) conn_handle;
     (void) attr_handle;
     (void) arg;
+    int rc = 1;
     // input your code
 
+
     (void) ctxt;
-    return 1;
-}
-
-
-static unsigned get_qos(const char *str)
-{
-    int qos = atoi(str);
-
-    switch (qos) {
-    case 1:     return QOS1;
-    case 2:     return QOS2;
-    default:    return QOS0;
-    }
-}
-
-static void _on_msg_received(MessageData *data)
-{
-    printf("paho_mqtt_example: message received on topic"
-           " %.*s: %.*s\n",
-           (int)data->topicName->lenstring.len,
-           data->topicName->lenstring.data, (int)data->message->payloadlen,
-           (char *)data->message->payload);
+    return rc;
 }
 
 int mqtt_disconnect(void)
@@ -275,14 +256,6 @@ void send(void)
     mqtt_pub();
     mqtt_disconnect();
 }
-static const shell_command_t shell_commands[] =
-{
-    // { "ip",     "set_ip",                             _cmd_ip     },
-    { "sub",    "subscribe topic",                    _cmd_sub    },
-    { "unsub",  "unsubscribe from topic",             _cmd_unsub  },
-    {  "send",  "send data",                          _cmd_send },
-    { NULL,     NULL,                                 NULL        }
-};
 
 static unsigned char buf[BUF_SIZE];
 static unsigned char readbuf[BUF_SIZE];
@@ -370,10 +343,5 @@ int main(void)
         delay_ms(mqtt_interval_ms);
     }
     
-
-
-    char line_buf[SHELL_DEFAULT_BUFSIZE];
-    shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
-
     return 0;
 }
