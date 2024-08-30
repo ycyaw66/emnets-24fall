@@ -30,7 +30,7 @@ RIOT系统需要额外安装以下工具：
 ```bash
 sudo apt install -y git gcc-arm-none-eabi make gcc-multilib \
     libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen \
-    wget unzip python3-serial
+    wget unzip python3-serial vim
 ```
 
 ### 2.2 下载ESP32编译工具
@@ -43,9 +43,20 @@ sudo apt install -y git gcc-arm-none-eabi make gcc-multilib \
 cd ~/RIOT
 # 国内镜像
 export IDF_GITHUB_ASSETS="dl.espressif.cn/github_assets"
-dist/tools/esptools/install.sh all
+dist/tools/esptools/install.sh esp32
 echo 'alias esp_idf=". ~/RIOT/dist/tools/esptools/export.sh"' >> ~/.bashrc  
 source ~/.bashrc
+```
+**注意**:, 如果上面因github代理问题，无法安装成功，请修改`dist/tools/esptools/install.sh`内容，将里面所有`github.com`替换成`githubfast.com`。手动修改或者使用按下面指令进行替换字符串。
+
+```bash
+cp dist/tools/esptools/install.sh dist/tools/esptools/install.sh.git
+vim dist/tools/esptools/install.sh
+# 下面不要复制粘贴，手动输入,后回车
+:%s/github.com/githubfast.com/g
+
+# 手动输入，保存退出
+:wq
 ```
 
 之后，去安装好的环境进行测试，这里使用最简单的hello-word的案例。使用板子为esp32-wroom-32，通过USB连接到电脑，并给用户提供读写设备端口的权限（每次重新连接USB都要执行）。
@@ -75,6 +86,13 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 如果flash的时候，出现以下内容，请在flash的时候，按住boot按钮。
 > A fatal error occurred: Failed to connect to ESP32: Wrong boot mode detected (0x13)! The chip needs to be in download mode.  
 
+
+**注意**: 如果出现github.com/xx/xx下载失败，可使用以下方法，替换代理。
+```bash
+git config --global url."https://githubfast.com".insteadOf https://github.com
+# 如果要取消git代理
+git config --global --unset url."https://githubfast.com".insteadOf
+```
 
 #### 2.2.2 方法二: 容器工具链下载
 ##### (1) 容器及容器安装
