@@ -96,7 +96,7 @@ make BOARD=esp32-wroom-32 term -C tests/pkg/tflite-micro/
 
 1) 烧写程序
 ```bash
-cd ~/RIOT/examples/11_tingml_get_datasets/
+cd ~/RIOT/examples/emnets_experiment/11_tingml_get_datasets/
 esp_idf all
 make BOARD=esp32-wroom-32 flash
 # 注意不要term
