@@ -4,7 +4,7 @@
 物理网课程实验，需要提前下载[RIOT](https://github.com/RIOT-OS/RIOT)， 将这个仓库里面的代码替换加入RIOT的example里面
 
 ## 2 RIOT环境安装
-本实验最好是在Ubuntu20.04系统下进行，建议准备一个虚拟机，虚拟机安装和搭建Ubuntu20.04系统的具体教程可以参考[这篇文章](https://zhuanlan.zhihu.com/p/355314438)，我们也会提供已经测试好的虚拟机环境包(预计8G)。
+本实验最好是在Ubuntu20.04系统下进行，建议准备一个虚拟机，虚拟机安装和搭建Ubuntu20.04系统的具体教程可以参考[这篇文章](https://zhuanlan.zhihu.com/p/355314438)，我们也会提供已经测试好的虚拟机环境包(预计8G)。使用MAC系统电脑的同学们，Ubuntu Arm版本也支持后续RIOT实验，可以参考[这篇文章](https://blog.csdn.net/luzhengyang2077/article/details/129910484).
 
 ### 2.1 RIOT项目拉取
 需要去github上下载RIOT开源项目，由于我们后续使用的开发板是ESP32系列，需要安装ESP32编译工具。
