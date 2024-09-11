@@ -32,6 +32,13 @@ sudo apt install -y git gcc-arm-none-eabi make gcc-multilib \
     libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen \
     wget unzip python3-serial vim
 ```
+如果是ARM版本的Ubuntu，则执行以下指令完成工具安装。
+```bash
+sudo apt install -y git gcc-arm-none-eabi make \
+    libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen \
+    wget unzip python3-serial vim
+
+```
 
 ### 2.2 下载ESP32编译工具
 这里提供两种方法，一种是esp32工具链直接下载在主机环境，另外一种方法是下载已编译好的容器环境，这两种方法都可行，二选一即可，后续编译项目需要记住对应的编译方法。
@@ -57,6 +64,26 @@ vim dist/tools/esptools/install.sh
 
 # 手动输入，保存退出
 :wq
+```
+
+**经测试，如何无法访问github，那么请按下面指令，完成ESP32的编译环境安装。**
+
+```bash
+cd ~
+mkdir .espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/
+# x86_64 正常ubuntu版本，请执行下面两行代码
+wget https://gitee.com/emnets/emnets_experiment/releases/download/esp_tools/xtensa-esp32-elf-12.2.0_20230208-x86_64-linux-gnu.tar.xz
+tar -xf xtensa-esp32-elf-12.2.0_20230208-x86_64-linux-gnu.tar.xz
+
+# arm ubuntu版本， MAC 安装的虚拟机,请执行下面两行代码
+wget https://gitee.com/emnets/emnets_experiment/releases/download/esp_tools/xtensa-esp32-elf-12.2.0_20230208-aarch64-linux-gnu.tar.xz
+tar -xf xtensa-esp32-elf-12.2.0_20230208-aarch64-linux-gnu.tar.xz
+
+
+# 都需要执行
+cd ~/RIOT/
+echo 'alias esp_idf=". ~/RIOT/dist/tools/esptools/export.sh"' >> ~/.bashrc  
+source ~/.bashrc
 ```
 
 之后，去安装好的环境进行测试，这里使用最简单的hello-word的案例。使用板子为esp32-wroom-32，通过USB连接到电脑，并给用户提供读写设备端口的权限（每次重新连接USB都要执行）。
