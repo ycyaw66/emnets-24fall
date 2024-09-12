@@ -126,7 +126,7 @@ git config --global url."https://githubfast.com".insteadOf https://github.com
 git config --global --unset url."https://githubfast.com".insteadOf
 ```
 
-**注意**: 如果出现`/usr/bin/env: ‘python3\r’: No such file or directory` 问题，用以下方法，解决问题，然后重新执行编译指令。:
+**注意**: 如果出现`/usr/bin/env: ‘python3\r’: No such file or directory` 问题，用以下方法，解决问题，然后重新执行编译指令。（Windows换行规则和linux不一样，多了`\r`）
 ```bash
 sudo apt install dos2unix
 dos2unix ~/RIOT/dist/tools/lazysponge/lazysponge.py
