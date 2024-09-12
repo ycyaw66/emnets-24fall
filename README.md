@@ -10,6 +10,8 @@
 需要去github上下载RIOT开源项目，由于我们后续使用的开发板是ESP32系列，需要安装ESP32编译工具。
 ```bash
 cd ~
+sudo apt update
+sudo apt install -y git
 git clone https://github.com/RIOT-OS/RIOT -b 2024.04-devel
 # 可用国内镜像源，如 git clone https://githubfast.com/RIOT-OS/RIOT
 ```
