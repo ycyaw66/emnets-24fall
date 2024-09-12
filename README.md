@@ -71,6 +71,8 @@ vim dist/tools/esptools/install.sh
 ```bash
 cd ~
 mkdir -p .espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/
+cd .espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/
+rm *.xz
 # x86_64 正常ubuntu版本，请执行下面两行代码
 wget https://gitee.com/emnets/emnets_experiment/releases/download/esp_tools/xtensa-esp32-elf-12.2.0_20230208-x86_64-linux-gnu.tar.xz
 tar -xf xtensa-esp32-elf-12.2.0_20230208-x86_64-linux-gnu.tar.xz
