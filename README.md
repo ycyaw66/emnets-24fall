@@ -12,7 +12,7 @@
 cd ~
 sudo apt update
 sudo apt install -y git
-git clone https://github.com/RIOT-OS/RIOT -b 2024.04-devel
+git clone https://github.com/RIOT-OS/RIOT -b 2024.10-devel
 # 可用国内镜像源，如 git clone https://githubfast.com/RIOT-OS/RIOT
 ```
 如果有什么问题，可以先去浏览下[官网文档](https://doc.riot-os.org/getting-started.html)。
