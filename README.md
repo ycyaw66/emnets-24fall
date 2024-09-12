@@ -89,7 +89,9 @@ tar -xf xtensa-esp32-elf-12.2.0_20230208-aarch64-linux-gnu.tar.xz
 cd ~/RIOT/
 echo 'alias esp_idf=". ~/RIOT/dist/tools/esptools/export.sh"' >> ~/.bashrc  
 source ~/.bashrc
-```sudo modprobe cp210x
+sudo apt install python3-pip
+python3 -m pip install Twisted
+```
 
 之后，去安装好的环境进行测试，这里使用最简单的hello-word的案例。使用板子为esp32-wroom-32，通过USB连接到电脑，并给用户提供读写设备端口的权限（每次重新连接USB都要执行）。
 > 在Linux系统中，ESP32连接到计算机时，通常会被识别为/dev/ttyUSB0或类似的串口设备。如果用户没有权限访问/dev/ttyUSB0，通常是因为缺少相应的权限。将用户添加到dialout组：在Linux系统中，通常/dev/ttyUSB0的权限属于dialout组。你可以将用户添加到dialout组中，以获得访问权限。
@@ -133,10 +135,13 @@ find ~/RIOT/ -type f -name "*.py" -exec dos2unix {} +
 dos2unix ~/RIOT/dist/tools/pyterm/pyterm
 ```
 **注意**: 使用wsl2+ubuntu22.04的同学，
-如果lsusb出现了esp32设备的信息，如`Bus 001 Device 005: ID 10c4:ea60 Silicon Labs CP210x UART Bridge`，但是`ls /dev/tty*`没有 `/dev/ttyUSB`开头的端口,执行下面指令。
+(1) esp32设备绑定问题，结合[esp-wsl](https://github.com/lure23/ESP32-WSL)和[通过WSL2连接USB串口调试ESP32](https://blog.csdn.net/ydogg/article/details/125832529)这两篇文章，解决问题。
+
+(2) 如果lsusb出现了esp32设备的信息，如`Bus 001 Device 005: ID 10c4:ea60 Silicon Labs CP210x UART Bridge`，但是`ls /dev/tty*`没有 `/dev/ttyUSB`开头的端口,执行下面指令。
 ```bash
 sudo modprobe cp210x
 ```
+(3) 出现问题`Attach request failed - device in error state`, 查看下[github issues](https://github.com/dorssel/usbipd-win/issues/492)
 
 #### 2.2.2 方法二: 容器工具链下载
 ##### (1) 容器及容器安装
