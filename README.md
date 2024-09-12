@@ -132,6 +132,11 @@ sudo apt install dos2unix
 find ~/RIOT/ -type f -name "*.py" -exec dos2unix {} +
 dos2unix ~/RIOT/dist/tools/pyterm/pyterm
 ```
+**注意**: 使用wsl2+ubuntu22.04的同学，
+如果lsusb出现了esp32设备的信息，如`Bus 001 Device 005: ID 10c4:ea60 Silicon Labs CP210x UART Bridge`，但是`ls /dev/tty*`没有 `/dev/ttyUSB`开头的端口,执行下面指令。
+```bash
+sudo modprobe cp210x
+```
 
 #### 2.2.2 方法二: 容器工具链下载
 ##### (1) 容器及容器安装
