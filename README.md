@@ -212,7 +212,7 @@ cd ~/RIOT/
 BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
    DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
    make BOARD=esp32-wroom-32 flash -C examples/hello-world/
-# 编译成功后，访问端口，并点击开发板左侧的重启按钮
+# 编译成功后，访问端口，并点击开发板左侧的重启Reset按钮
 make BOARD=esp32-wroom-32 term -C examples/hello-world/ 
 ```
 
