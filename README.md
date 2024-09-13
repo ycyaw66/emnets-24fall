@@ -95,6 +95,7 @@ python3 -m pip install Twisted
 
 之后，去安装好的环境进行测试，这里使用最简单的hello-word的案例。使用板子为esp32-wroom-32，通过USB连接到电脑，并给用户提供读写设备端口的权限（每次重新连接USB都要执行）。
 > 在Linux系统中，ESP32连接到计算机时，通常会被识别为/dev/ttyUSB0或类似的串口设备。如果用户没有权限访问/dev/ttyUSB0，通常是因为缺少相应的权限。将用户添加到dialout组：在Linux系统中，通常/dev/ttyUSB0的权限属于dialout组。你可以将用户添加到dialout组中，以获得访问权限。
+
 ```bash
 # 运行以下命令，将当前用户添加到dialout组：
 sudo usermod -a -G dialout $USER
@@ -117,8 +118,13 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 > 2024-04-01 10:57:40,744 \# You are running RIOT on a(n) esp32-wroom-32 board.  
 > 2024-04-01 10:57:40,749 \# This board features a(n) esp32 CPU.   
 
+
 如果flash的时候，出现以下内容，请在flash的时候，按住boot按钮。
 > A fatal error occurred: Failed to connect to ESP32: Wrong boot mode detected (0x13)! The chip needs to be in download mode.  
+
+
+**注意**: 如果VMWARE虚拟机上面烧写指令提示，找不到`/dev/ttyUSB0`端口，需要重新插拔一次ESP32(最好每次虚拟机重启后，再重新插拔一次ESP32设备，然后在虚拟机弹出页面，选择设备连接到对应的Ubuntu虚拟机。)
+
 
 **推荐**: 在Ubuntu系统安装openssh-server, 开启ssh 服务器，外面安装vscode, 通过vscode ssh连接到Ubuntu系统，方便修改代码。
 ```bash
