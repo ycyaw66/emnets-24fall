@@ -120,6 +120,14 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 如果flash的时候，出现以下内容，请在flash的时候，按住boot按钮。
 > A fatal error occurred: Failed to connect to ESP32: Wrong boot mode detected (0x13)! The chip needs to be in download mode.  
 
+**推荐**: 在Ubuntu系统安装openssh-server, 开启ssh 服务器，外面安装vscode, 通过vscode ssh连接到Ubuntu系统，方便修改代码。
+```bash
+# ubuntu
+sudo apt update
+sudo apt install openssh-server net-tools
+ifconfig
+# 记住 eth0之类的 172.开头的ip，后续ssh连接服务器，可参考网上教程。
+```
 
 **注意**: 如果出现github.com/xx/xx下载失败，可使用以下方法，替换代理。
 ```bash
