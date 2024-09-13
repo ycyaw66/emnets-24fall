@@ -109,7 +109,7 @@ esp_idf all
 cd ~/RIOT/
 # 第一次或许需要下载一些东西，可能比较慢
 make BOARD=esp32-wroom-32 flash -C examples/hello-world/   
-# 访问ESP32, 访问成功后，需要点击板子的左侧重启按钮。
+# 访问ESP32, 访问成功后，需要点击板子的左侧重启Reset按钮。
 make BOARD=esp32-wroom-32 term -C examples/hello-world/ 
 ```
 > 2024-04-01 10:57:40,738 \# main(): This is RIOT! (Version: 2024.04-devel-586-g48a8e6)  
