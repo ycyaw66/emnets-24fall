@@ -125,6 +125,8 @@ make BOARD=esp32-wroom-32 term -C examples/hello-world/
 # ubuntu
 sudo apt update
 sudo apt install openssh-server net-tools
+sudo systemctl enable ssh
+sudo systemctl start sshd
 ifconfig
 # 记住 eth0之类的 172.开头的ip，后续ssh连接服务器，可参考网上教程。
 ```
