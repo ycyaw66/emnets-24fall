@@ -364,3 +364,8 @@ make BOARD=esp32-wroom-32 flash term
 * AddReshape()
 * AddRelu()
 * ...
+
+
+
+### ACKNOWLEDGMENTS
+特别感谢孙同学在解决Python环境中TensorFlow版本安装问题上提供的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
