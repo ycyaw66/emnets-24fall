@@ -17,7 +17,9 @@
 ```bash
 # python3.8 和 python3.9都可以，其余目前版本不兼容
 sudo apt update && sudo apt install -y python3-pip vim python3.8 python3.8-dev 
-python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 tensorflow==2.6.0 scikit-learn protobuf==3.19.6 testresources keras==2.6.0 pyserial jupyter -i https://pypi.tuna.tsinghua.edu.cn/simple
+python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 \
+ tensorflow==2.6.0 scikit-learn protobuf==3.19.6 testresources \
+ keras==2.6.0 pyserial jupyter -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 python3.8
 >>> import tensorflow as tf
