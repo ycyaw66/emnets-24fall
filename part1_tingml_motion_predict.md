@@ -160,7 +160,8 @@ cd ~/RIOT/examples/emnets_experiment/12_tingml_gesture_predict_experiment/extern
 python3.8 -m jupyter notebook
 # 在弹出来的网页，进入train.ipynb, 然后按网上教程进行即可。
 ```
-基本上，在一个代码方块里面，按SHIFT+Enter即可。需要重新运行所有代码，就点击上面restart
+基本上，在一个代码方块里面，按SHIFT+Enter即可。需要重新运行所有代码，就点击上面restart。
+
 建议在VSCODE运行`.ipynb`文件，VSCODE Extensions插件 需要安装`python`和`jupyter`,然后直接带开`.ipynb`文件，右上角的kernel选中python3.8,后续操作后上述一致。
 
 具体如何操作`.ipynb`文件请参考[jupyter notebook教程](https://zhuanlan.zhihu.com/p/675002837)。
