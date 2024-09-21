@@ -21,10 +21,6 @@ python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 \
  tensorflow==2.6.0 scikit-learn protobuf==3.19.6 testresources \
  keras==2.6.0 pyserial jupyter -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-# 或者
-cd ~/RIOT/examples/emnets_experiment/
-python3.8 -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
-
 python3.8
 >>> import tensorflow as tf
 >>> exit()
