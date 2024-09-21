@@ -125,7 +125,7 @@ def main():
     )
     # 解析命令行参数
     args = parser.parse_args()
-    _directions = ["Stationary", "Tilted", "Moving", "Rotating"]  # 定义方向选项
+    _directions = ["Stationary", "Tilted", "Rotating", "Moving"]  # 定义方向选项
     control = SerialControl(
         direction=_directions[args.direction]
     )  # 创建SerialControl对象，设置方向为"Moving"
@@ -139,9 +139,9 @@ cd ~/RIOT/examples/11_tingml_get_datasets/
 python3.8 store_data.py --direction 0
 # Tilted
 python3.8 store_data.py --direction 1
-# Moving
-python3.8 store_data.py --direction 2
 # Rotating
+python3.8 store_data.py --direction 2
+# Moving
 python3.8 store_data.py --direction 3
 ```
 每种情况，多采几次，建议20次以上，尽量采不同重复真实状态，如`Tilted` **X轴倾斜(分大角度、小角度)、Y轴倾斜、Z轴倾斜**，**移动可以X轴移动、Y轴移动，往复移动、平面上随意移动、平面上画圈等等**，**旋转可空中任意方向旋转**等，除了`--direction`和状态一直外，程序重复执行即可，不会出现数据覆盖问题。
