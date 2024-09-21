@@ -15,11 +15,11 @@
 
 ### 运行环境安装
 ```bash
-sudo apt update && sudo apt install -y python3-pip vim
-python3 -m pip install numpy==1.24.0 matplotlib tensorflow==2.6.0 scikit-learn \
-    -i https://pypi.tuna.tsinghua.edu.cn/simple
-python3
-# 在python3
+# python3.8 和 python3.9都可以，其余目前版本不兼容
+sudo apt update && sudo apt install -y python3-pip vim python3.8 python3.8-dev 
+python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 tensorflow==2.6.0 scikit-learn protobuf==3.19.6 testresources keras==2.6.0 pyserial jupyter -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+python3.8
 >>> import tensorflow as tf
 >>> exit()
 ```
@@ -32,7 +32,7 @@ RIOT OS 官方给了`tests/pkg/tflite-micro/`案例, 其中使用MLP模型做手
 ```bash
 cd ~/RIOT/
 cd tests/pkg/tflite-micro/external_modules/mnist/
-python3 generate_digit.py --index 10 
+python3.8 generate_digit.py --index 10 
 ```
 <div style="text-align: center;">
   <figure>
@@ -134,13 +134,13 @@ def main():
 ```bash
 cd ~/RIOT/examples/11_tingml_get_datasets/
 # Stationary
-python3 store_data.py --direction 0
+python3.8 store_data.py --direction 0
 # Tilted
-python3 store_data.py --direction 1
+python3.8 store_data.py --direction 1
 # Moving
-python3 store_data.py --direction 2
+python3.8 store_data.py --direction 2
 # Rotating
-python3 store_data.py --direction 3
+python3.8 store_data.py --direction 3
 ```
 每种情况，多采几次，建议20次以上，尽量采不同重复真实状态，如`Tilted` **X轴倾斜(分大角度、小角度)、Y轴倾斜、Z轴倾斜**，**移动可以X轴移动、Y轴移动，往复移动、平面上随意移动、平面上画圈等等**，**旋转可空中任意方向旋转**等，除了`--direction`和状态一直外，程序重复执行即可，不会出现数据覆盖问题。
 
@@ -151,7 +151,17 @@ Note：数据集越丰富，后续模型性能大概率越好。采集后，数�
 
 #### 02 模型创建、训练、测试、生成部署模型
 该环节请查看`12_tingml_gesture_predict_experiment/external_modules/gesture/train.ipynb`文件，该文件给出整个详细模型训练的参考案例.
-如何在`.ipynb`文件上运行，请自行上网搜索`conda``jupyter notebook`等相关内容，遇到麻烦，请及时联系助教。 
+如何在`.ipynb`文件上运行，如果在终端，请在请自行上网搜索`jupyter notebook`等相关内容，遇到麻烦，请及时联系助教。 
+```bash
+# 如果在虚拟机里面
+cd ~/RIOT/examples/emnets_experiment/12_tingml_gesture_predict_experiment/external_modules/gesture/
+python3.8 -m jupyter notebook
+# 在弹出来的网页，进入train.ipynb, 然后按网上教程进行即可。
+```
+基本上，在一个代码方块里面，按SHIFT+Enter即可。需要重新运行所有代码，就点击上面restart
+建议在VSCODE运行`.ipynb`文件，VSCODE Extensions插件 需要安装`python`和`jupyter`,然后直接带开`.ipynb`文件，右上角的kernel选中python3.8,后续操作后上述一致。
+
+具体如何操作`.ipynb`文件请参考[jupyter notebook教程](https://zhuanlan.zhihu.com/p/675002837)。
 
 #### 03 部署模型
 1) 数据获取。为节省展示空间，下面代码与实际代码存在差异，只为解释关键部分。`12_tingml_gesture_predict_experiment/main.cpp``get_imu_data`收集一个样本的MPU6050传感器数据，并调用模型做预测。需要注意`SAMPLES_PER_GESTURE`和`class_num`需要与训练时的参数对应。`class_num`对应label种类数，`SAMPLES_PER_GESTURE`代表每个样本需要连续多少份数据。调用`predict`函数得到最终结构，该函数第一个参数是样本第一个数据的地址，第二个参数是样本长度, 第三个参数表示只有概率大于`threshold`，预测结果可信, 第四个参数表示分类数量`class_num`。
