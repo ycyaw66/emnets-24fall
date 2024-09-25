@@ -17,15 +17,30 @@
 ```bash
 # python3.8 和 python3.9都可以，其余目前版本不兼容
 sudo apt update && sudo apt install -y python3-pip vim python3.8 python3.8-dev 
+echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.bashrc  
+source ~/.bashrc
+
 python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 \
  tensorflow==2.6.0 scikit-learn protobuf==3.19.6 testresources \
- keras==2.6.0 pyserial jupyter -i https://pypi.tuna.tsinghua.edu.cn/simple
+ keras==2.6.0 pyserial jupyter~=1.0.0 typing-extensions~=4.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 python3.8
 >>> import tensorflow as tf
 >>> exit()
 ```
+
 上面导入tensorflow不出现报错即完成安装。
+出现一下问题，可以直接忽略。
+![ERROR](./figs/error.png.png)
+
+### 测试tensorflow
+```
+wget https://gitee.com/emnets/emnets_experiment/releases/download/esp_tools/test_tensorflow.py
+python3.8 test_tensorflow.py
+```
+输出结果如下所示，第一次会下载mnist数据集，这里图没有显示。
+![TEST OUTPUT](./figs/tensorflow_test_output.png)
+
 
 ### 案例一: 手写字识别
 #### (1) 运行案例
