@@ -61,7 +61,7 @@ python3.8 generate_digit.py --index 10
 可以看出数据集第11张图数字是0。
 
 
-**遇到问题:**如果运行的时候，在`import matplotlib.pyplot as plt`出现问题，如下图所示。
+**遇到问题**:如果运行的时候，在`import matplotlib.pyplot as plt`出现问题，如下图所示。
 ![matplotlib error](./figs/matplotlib_error.png)
 请执行以下命令。
 ```bash
