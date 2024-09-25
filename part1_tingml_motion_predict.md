@@ -32,8 +32,7 @@ python3.8
 上面导入tensorflow不出现报错即完成安装。
 
 ![ERROR](./figs/error.png)
-
-出现一下问题，可以直接忽略。
+环境安装后出现上面问题，可以直接忽略。
 
 ### 测试tensorflow
 ```
