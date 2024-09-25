@@ -60,12 +60,14 @@ python3.8 generate_digit.py --index 10
 
 可以看出数据集第11张图数字是0。
 
-如果运行的时候，在`import matplotlib.pyplot as plt`出现问题，如下图所示。
+
+**遇到问题:**如果运行的时候，在`import matplotlib.pyplot as plt`出现问题，如下图所示。
 ![matplotlib error](./figs/matplotlib_error.png)
 请执行以下命令。
 ```bash
 python3.8 -m pip install --upgrade Pillow
 ```
+
 
 直接执行以下代码，即可运行手写字案例。第一次编译,需要很长的时间,适当等待下,可同时着手看第二个案例.(需要自动从github下载tflite-micro库,同时模型编译需要很长时间, 如果在这一步因一些元素,无法正常编译,请及时联系助教).
 
