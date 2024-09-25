@@ -50,16 +50,18 @@ make BOARD=esp32-wroom-32 flash term
 ##### 基于电脑的python脚本
 1) 安装python `bluepy`库。
 ```bash
-python3 -m pip install bluepy
+sudo apt-get install python3-pip libglib2.0-dev
+python3.8 -m pip install bluepy==1.1.4
+sudo hciconfig hci0 down && sudo hciconfig hci0 up
 ```
 2) 根据刚才串口打印的`Default MAC address: 88:13:BF:0C:12:59`, 将MAC地址替换send_ble.py第15行的`target_address`,注意mac addr 这里需要用小写字母如**88:13:BF:0C:12:59**需要改成**88:13:bf:0c:12:59**，不然找不到对应设备。执行`send_ble.py`脚本。如果出现无法连接的情况，且终端显示`mismatch`等信息，需要重启以下ESP32或者多执行几次脚本，多尝试几次。目前，脚本还不稳定。
 
 ```bash
 cd ~/RIOT/examples/emnets_experiment/20_nimble_gatt/
-python3 send_ble.py
-# sudo python3 -m pip install bluepy
+python3.8 send_ble.py
+# sudo python3 -m pip install bluepy==1.1.4
 # 运行scan()时可能需要sudo权限
-sudo python3 send_ble.py
+# sudo python3.8 send_ble.py
 ```
 `send_ble`自行查看`scan()`和`send()`函数，`scan()`扫描周边所有蓝牙，`send()`里面会先通知设备开灯，然后5秒后，设备关灯，期间会多次读led
 状态。如果，基于该方案的学生，需要将`scan()`和`send()`结果打印信息保存(复制或截图)。
