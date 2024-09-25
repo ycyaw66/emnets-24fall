@@ -61,7 +61,7 @@ cd ~/RIOT/examples/emnets_experiment/20_nimble_gatt/
 python3.8 send_ble.py
 # sudo python3 -m pip install bluepy==1.1.4
 # 运行scan()时可能需要sudo权限
-# sudo python3.8 send_ble.py
+# sudo python3 send_ble.py
 ```
 `send_ble`自行查看`scan()`和`send()`函数，`scan()`扫描周边所有蓝牙，`send()`里面会先通知设备开灯，然后5秒后，设备关灯，期间会多次读led
 状态。如果，基于该方案的学生，需要将`scan()`和`send()`结果打印信息保存(复制或截图)。
