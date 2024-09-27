@@ -362,13 +362,14 @@ make BOARD=esp32-wroom-32 flash term
 main_functions.cc:95:56: error: no matching function for call to 'tflite::MicroInterpreter::MicroInterpreter(const tflite::Model*&, tflite::MicroMutableOpResolver<9>&, uint8_t [32768], const int&)'  
    95 |         model, resolver, tensor_arena, kTensorArenaSize);  
 
-如果遇到以上问题,请按照一下指令。
+如果遇到以上问题,请保存实验代码后，重新下载RIOT-OS系统。
 
 ```bash
-cd ~/RIOT/build/pkg
-rm -rf tflite-micro
-wget https://gitee.com/emnets/emnets_experiment/releases/download/esp_tools/tflite-micro.zip
-unzip tflite-micro.zip
+cd ~
+mv ~/examples/emnets_experiment .
+rm -rf RIOT
+git clone https://github.com/RIOT-OS/RIOT -b 2024.10-devel
+mv emnets_experiment ~/RIOT/examples/
 ```
 
 
