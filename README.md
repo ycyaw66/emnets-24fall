@@ -51,7 +51,7 @@ sudo apt install -y git gcc-arm-none-eabi make \
 ```bash
 cd ~/RIOT
 # 国内镜像
-export IDF_GITHUB_ASSETS="dl.espressif.cn/github_assets"
+# export IDF_GITHUB_ASSETS="dl.espressif.cn/github_assets"
 dist/tools/esptools/install.sh esp32
 echo 'alias esp_idf=". ~/RIOT/dist/tools/esptools/export.sh"' >> ~/.bashrc  
 source ~/.bashrc
