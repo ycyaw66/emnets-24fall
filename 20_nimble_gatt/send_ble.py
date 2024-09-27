@@ -11,7 +11,7 @@ class ScanDelegate(btle.DefaultDelegate):
         # elif isNewData:
         #     print(f"Received new data from {dev.addr}")
 
-target_address = "c0:11:99:88:77:66"
+target_address = "88:13:bf:0c:12:59"
 # target_address = "input your esp32 MAC addr, please convert captial letters to lowercase letter"
 device_found = True
 addr_type = "public"
