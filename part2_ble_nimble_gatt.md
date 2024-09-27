@@ -311,6 +311,22 @@ static int gatt_svr_chr_access_rw_demo(
 
 
 ### 补充:
+0) 如果需要自定义MAC地址, 需要在`LOG_INFO`和`nimble_autoadv_start`之间加入以下四行代码。
+```c++
+LOG_INFO("Default MAC address: %02X:%02X:%02X:%02X:%02X:%02X\n",
+            own_addr[5], own_addr[4], own_addr[3],
+            own_addr[2], own_addr[1], own_addr[0]);
+nimble_autoadv_cfg_t cfg;
+nimble_autoadv_get_cfg(&cfg);
+cfg.own_addr_type = own_addr_type;
+nimble_autoadv_cfg_update(&cfg);
+nimble_autoadv_start(NULL);
+```
+`void nimble_autoadv_start(ble_addr_t *addr);`中的addr不是更改广播的地址,如果是NULL,那么任何设备都能收到这个广播包,如果不是NULL,那么只有addr这个地址的设备才能收到广播包。(定向广播)
+
+另外要实现自定义MAC地址,请浏览`RIOT/build/pkg/nimble/nimble/host/include/host/ble_hs_id.h`里面的函数,尤其是`int ble_hs_id_set_rnd(const uint8_t *rnd_addr);`,其次修改地址最好在`ble_hs_id_infer_auto(0, &own_addr_type);`前面修改。
+
+
 1) 上面用到的部分结构体，内容并不重要，放这，看看就行。
 ```c++
 
@@ -446,3 +462,5 @@ struct ble_gatt_access_ctxt {
 #define BLE_GATT_CHR_F_WRITE_AUTHOR                     0x4000
 ```
 
+### ACKNOWLEDGMENTS
+特别感谢赵同学在BLE bluepy库以及自定义蓝牙地址上调试提供的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
