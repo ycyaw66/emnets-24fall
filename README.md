@@ -267,7 +267,7 @@ make BOARD=esp32-wroom-32 flash term -C 00_threads/
 > 2024-05-23 15:30:31,694 # Worker 1: Executing Task 1  
 
 ## 4 实验
-这个实验项目涵盖了四个部分：基础设备控制、BLE蓝牙通信、基于MQTT的ThingsBoards物联网设备管理以及基于TinyML进行设备姿态识别。
+这个实验项目涵盖了四个部分：基础设备控制、基于TinyML对设备运动状态识别、BLE蓝牙通信以及基于MQTT的ThingsBoards物联网设备管理。
 ### 4.1 基础设备控制
 基础设备控制实验着眼于RIOT的多线程控制，基于GPIO引脚输出的LED灯控制以及基于I2C总线的IMU传感器数据读取。最终目标是根据设备的姿态展示不同的LED显示状态。
 
