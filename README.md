@@ -68,7 +68,7 @@ vim dist/tools/esptools/install.sh
 :wq
 ```
 
-**经测试，如何无法访问github，那么请按下面指令，完成ESP32的编译环境安装。**
+**经测试，如何无法访问github或者提示elf-gcc编译错误，那么请按下面指令，完成ESP32的编译环境安装。**
 
 ```bash
 cd ~
