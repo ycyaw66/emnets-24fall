@@ -355,6 +355,22 @@ make BOARD=esp32-wroom-32 flash term
 > 2024-08-07 01:48:53,340 # Motion prediction: 0  
 > 2024-08-07 01:48:53,341 # Predict: 0, Stationary  
 
+### 问题解决
+
+(1) 问题一
+> external_modules/gesture/main_functions.cc: In function 'void setup()':  
+main_functions.cc:95:56: error: no matching function for call to 'tflite::MicroInterpreter::MicroInterpreter(const tflite::Model*&, tflite::MicroMutableOpResolver<9>&, uint8_t [32768], const int&)'  
+   95 |         model, resolver, tensor_arena, kTensorArenaSize);  
+
+如果遇到以上问题,请按照一下指令。
+
+```bash
+cd ~/RIOT/build/pkg
+rm -rf tflite-micro
+wget https://gitee.com/emnets/emnets_experiment/releases/download/esp_tools/tflite-micro.zip
+unzip tflite-micro.zip
+```
+
 
 ### 正式实验: 基于神经网络进行设备运动状态识别
 
