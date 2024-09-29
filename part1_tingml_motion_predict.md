@@ -13,17 +13,33 @@
 - 掌握模型训练、优化和部署的基本流程。
 - 实现基于TinyML的姿态识别系统，判断ESP32设备的运动状态。
 
-### 运行环境安装
+### 运行环境安装(Ubuntu22.04 和 Ubuntu 20.04 请按照对应的步骤进行安装。)
 ```bash
 # python3.8 和 python3.9都可以，其余目前版本不兼容
-sudo apt update && sudo apt install -y python3-pip vim python3.8 python3.8-dev 
+# ubuntu 22.04 请额外执行下面命令
+sudo apt install -y software-properties-common
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+
+sudo apt update && sudo apt install -y python3-pip vim python3.8 python3.8-dev python3.8-distutils
 echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.bashrc  
 source ~/.bashrc
 
 python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 \
  tensorflow==2.6.0 scikit-learn protobuf==3.19.6 testresources \
- keras==2.6.0 pyserial jupyter~=1.0.0 typing-extensions~=4.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
+ keras==2.6.0 pyserial jupyter~=1.0.0 typing-extensions~=3.7 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
+
+# ubuntu 20.04
+sudo apt update && sudo apt install -y python3-pip vim python3.8 python3.8-dev python3.8-distutils
+echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.bashrc  
+source ~/.bashrc
+
+python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 \
+ tensorflow==2.6.0 scikit-learn protobuf==3.19.6 testresources \
+ keras==2.6.0 pyserial jupyter~=1.0.0 typing-extensions~=4.12 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+# 测试
 python3.8
 >>> import tensorflow as tf
 >>> exit()
