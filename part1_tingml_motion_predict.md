@@ -47,9 +47,20 @@ python3.8
 
 上面导入tensorflow不出现报错即完成安装。
 
+### 报错问题解决
 
 ![ERROR](./figs/error.png)
+
 如果ubuntu20.04系统, 环境安装后出现上面问题，可以直接忽略。
+
+![alt text](./figs/error_1.png)
+
+如果出现上面问题, 那么执行下面指令, 后续ipynb操作都在vscode上进行,具体vscode怎么运行ipynb文件,请参考[简单教程](https://blog.csdn.net/F_zHua/article/details/127627469)即可.
+```bash
+python3.8 -m pip install typing-extensions~=3.7 -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+
 
 ### 测试tensorflow
 ```
