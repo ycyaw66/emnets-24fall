@@ -16,7 +16,7 @@
 ### 运行环境安装(Ubuntu22.04 和 Ubuntu 20.04 请按照对应的步骤进行安装。)
 ```bash
 # python3.8 和 python3.9都可以，其余目前版本不兼容
-# ubuntu 22.04 请额外执行下面命令
+# ubuntu 22.04 请执行下面命令
 sudo apt install -y software-properties-common
 sudo add-apt-repository ppa:deadsnakes/ppa -y
 
@@ -29,7 +29,7 @@ python3.8 -m pip install numpy~=1.19.2 matplotlib~=3.6.0 \
  keras==2.6.0 pyserial jupyter~=1.0.0 typing-extensions~=3.7 -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 
-# ubuntu 20.04
+# ubuntu 20.04 请执行下面命令
 sudo apt update && sudo apt install -y python3-pip vim python3.8 python3.8-dev python3.8-distutils
 echo 'export PATH=$PATH:$HOME/.local/bin' >> ~/.bashrc  
 source ~/.bashrc
