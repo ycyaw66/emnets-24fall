@@ -518,7 +518,7 @@ esp32 终端最终会打印类似以下的信息。
 ![](figs/mqtt/led_state.mp4)
 
 #### 4.4 添加规则引擎
-敬请期待!!!
+规则引擎内容比较多，请直接下载并自行浏览[补充材料-规则引擎](https://gitee.com/emnets/emnets_experiment/releases/download/material/ThingsBoard%E8%A7%84%E5%88%99%E5%BC%95%E6%93%8E.pdf)。
 
 ### 五、正式实验: 设备数据上云且可视化展示
 该环节代码处于`31_mqtt_thingsboard_experiment`,通过前面案例，想必你们已经学会如何使用MQTT将数据上传到Thingsboard云平台以及可视化显示。本实验需要在之前的所有实验基础上，实现以下具体功能:
