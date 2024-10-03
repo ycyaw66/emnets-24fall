@@ -371,9 +371,12 @@ int main(void)
     do
     {
         addr = netif_ip_addr4(netif_default)->addr;
-        delay_ms(500);
-        printf("Waiting for ip dhcp, addr:%lu\n", addr);
-    }while (addr == 0x0); 
+        printf("Waiting for getting IP, current IP addr:");
+        ip_addr_debug_print(LWIP_DBG_ON, netif_ip_addr4(netif_default));
+        printf("\n");
+        delay_ms(1000);
+    }while (addr == 0x0);    
+
 
     char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
