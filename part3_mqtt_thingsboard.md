@@ -534,7 +534,7 @@ esp32 终端最终会打印类似以下的信息。
 
 ### 六、代码更新
 老版本等待IP分配，是查看是否能成功MQTT连接，这边会导致一些问题。（不改其实大概率也没有问题。）
-这里说明一下旧代码如何修改。
+这里说明一下旧代码如何修改。只需要修改`main.cpp`文件。
 首先加入头文件`#include "lwip/netif.h"`, 其次将下面代码
 ```c++
 // waiting for get IP 
@@ -546,7 +546,7 @@ mqtt_disconnect();
 ```
 改成下面代码即可。
 ```c++
-// main.cc
+// main.cpp
 // waiting for get IP 
 extern struct netif *netif_default;
 uint32_t addr;
