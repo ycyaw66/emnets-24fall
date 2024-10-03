@@ -439,21 +439,21 @@ int main(){
 
 
 #### 4.2 运行案例
-按照上面要去，修改平台IP`DEFAULT_IPV4`(main.cpp)和WIFI_SSID,WIFI_PASS(Makefile)内容。
+按照上面要去，修改平台IP`DEFAULT_IPV4`(main.cpp)和WIFI_SSID,WIFI_PASS(Makefile)内容。(WIFI只能是2.4GHz频段的)
 ```bash
 cd ~/RIOT/examples/emnets_experiment/30_mqtt_thingsboard
 # sudo chmod 777 /dev/ttyUSB*
 esp_idf all
 make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
  WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \
- flash term -C examples/paho-mqtt/
+ flash term
  
 # 基于容器的方法(esp32工具链)
 BUILD_IN_DOCKER=1 DOCKER="sudo docker" \
 DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
 make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
     WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \
-    flash term -C examples/paho-mqtt/
+    flash term
 
 ```
 
