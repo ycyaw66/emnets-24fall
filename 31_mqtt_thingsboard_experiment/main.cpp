@@ -47,6 +47,8 @@ extern "C" {
     #include "host/ble_gatt.h"
     #include "services/gap/ble_svc_gap.h"
     #include "services/gatt/ble_svc_gatt.h"
+    #include "lwip/netif.h"
+
 }
 using namespace std;
 void setup();
@@ -331,11 +333,14 @@ int main(void)
     nimble_autoadv_start(NULL);
 
     // waiting for get IP 
-    while(mqtt_connect() < 0)
+    extern struct netif *netif_default;
+    uint32_t addr;
+    do
     {
-        delay_ms(1500);
-    }
-    mqtt_disconnect();
+        addr = netif_ip_addr4(netif_default)->addr;
+        delay_ms(500);
+        printf("Waiting for ip dhcp, addr:%lu\n", addr);
+    }while (addr == 0x0); 
 
     while (1)
     {

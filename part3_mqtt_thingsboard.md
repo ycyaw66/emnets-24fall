@@ -454,7 +454,6 @@ DOCKER_IMAGE=schorcht/riotbuild_esp32_espressif_gcc_8.4.0 \
 make BOARD=esp32-wroom-32 LWIP_IPV4=1 GNRC_IPV6=0 \
     WIFI_SSID="WIFI账户" WIFI_PASS="WIFI密码" \
     flash term
-
 ```
 
 esp32 终端最终会打印类似以下的信息。
@@ -532,10 +531,39 @@ esp32 终端最终会打印类似以下的信息。
 **注意**：该实验是最后一个实验，与全部实验挂钩，后续可能需要涉及线下展示，在整个实验占大比分，请保持随时能复刻你实验结果的状态。
 
 
-### 六、错误解答
+### 六、代码更新
+老版本等待IP分配，是查看是否能成功MQTT连接，这边会导致一些问题。（不改其实大概率也没有问题。）
+这里说明一下旧代码如何修改。
+首先加入头文件`#include "lwip/netif.h"`, 其次将下面代码
+```c++
+// waiting for get IP 
+while(mqtt_connect() < 0)
+{
+    delay_ms(1500);
+}
+mqtt_disconnect();
+```
+改成下面代码即可。
+```c++
+// main.cc
+// waiting for get IP 
+extern struct netif *netif_default;
+uint32_t addr;
+do
+{
+    addr = netif_ip_addr4(netif_default)->addr;
+    delay_ms(500);
+    printf("Waiting for ip dhcp, addr:%lu\n", addr);
+}while (addr == 0x0); 
+```
+
+### 七、错误解答
 1) 出现下面问题，请将`external_modules/gesture/main_functions.cc`的参数`kTensorArenaSize`改小。
 
 > 2024-10-02 19:02:41,951 # Bluetooth controller initialize failed: 2570x0 => FAILED ASSERTION.  
+
+或者
+![alt text](figs/error_ap.png)
 
 2) 出现下面问题，请在`main.cpp`主函数里面在IMU线程创建前，执行`setup();`完成模型初始化。
 
@@ -566,3 +594,6 @@ esp32 终端最终会打印类似以下的信息。
 > 2024-10-02 19:06:07,797 # a8      : 00000000    a9      : 00000000      a10     : 000000fa      a11     : 0000003b  
 > 2024-10-02 19:06:07,803 # a12     : 0000000e    a13     : 3ffc1632      a14     : 000e24cc      a15     : 00000000  
 
+
+### ACKNOWLEDGMENTS
+特别感谢方同学在WIFI连接上提供的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。

@@ -31,6 +31,7 @@
 #include "xtimer.h"
 #include <string>
 #include "ledcontroller.hh"
+#include "lwip/netif.h"
 
 using namespace std;
 
@@ -364,11 +365,16 @@ int main(void)
         printf("[main]: Successfully set interrupt.\n");
     }
     // waiting for get IP 
-    while(mqtt_connect() < 0)
+    // waiting for get IP 
+    extern struct netif *netif_default;
+    uint32_t addr;
+    do
     {
-        delay_ms(1500);
-    }
-    mqtt_disconnect();
+        addr = netif_ip_addr4(netif_default)->addr;
+        delay_ms(500);
+        printf("Waiting for ip dhcp, addr:%lu\n", addr);
+    }while (addr == 0x0); 
+
     char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
 
