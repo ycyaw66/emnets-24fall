@@ -444,6 +444,16 @@ sudo apt install -y cmake
 * AddRelu()
 * ...
 
+然后在`external_modules/gesture/main_functions.cc`里面,改大resolver数量,然后加入上述方法.例如,这里要添加`Add`
+```c++
+// main_functions.cc
+// 下面数量是10,原来是9,这里我们添加一个op, Add
+static tflite::MicroMutableOpResolver<10> resolver;
+if (resolver.AddAdd() != kTfLiteOk) {
+    return;
+}
+```
+
 (4) 如果碰到内存相关的问题，请改小模型或者修改kTensorArenaSize.
 
 ### ACKNOWLEDGMENTS
