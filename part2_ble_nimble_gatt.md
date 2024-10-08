@@ -471,4 +471,4 @@ struct ble_gatt_access_ctxt {
 ```
 
 ### ACKNOWLEDGMENTS
-特别感谢赵同学在BLE bluepy库以及自定义蓝牙地址上调试提供的帮助, 以及周同学在windows系统蓝牙bleak库上以及苹果手机NRFCONNECT的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
+特别感谢赵同学在BLE bluepy库以及自定义蓝牙地址上调试提供的帮助, 和周同学在windows系统蓝牙bleak库上以及苹果手机NRFCONNECT上的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
