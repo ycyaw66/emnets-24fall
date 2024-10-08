@@ -28,6 +28,8 @@ make BOARD=esp32-wroom-32 flash term
 
 同时打印默认蓝牙MAC地址，每个设备默认MAC地址不一样，案例这个ESP32设备显示MAC地址为`88:13:BF:0C:12:59`
 接下来需要用到手机或者电脑与之通信，不同手机系统的同学请看对应部分进行后续操作。
+
+苹果手机可直接去应用市场下载 nRFConnect 软件，具体使用方法与下面安卓操作类似。
 ##### 基于安卓系统的手机 
 手机的操作系统属于Android, 请安装`20_nimble_gatt/nRFConnect_4_28_1.apk` APP。
 1) 打开nRFConnect APP，找到蓝牙名为**NimBLE GATT Example**的蓝牙, 同时留意蓝牙名下面的MAC地址，图中是**88:13:BF:0C:12:59**, **操作一:点击`CONNECT`，与ESP32服务器蓝牙建立连接**。
@@ -47,7 +49,7 @@ make BOARD=esp32-wroom-32 flash term
 
 后续，请参考上述操作，发送0x00数据(注意两个0)，关闭LED灯。请留意上述提到的所有`UUID`。
 
-##### 基于电脑的python脚本
+##### 基于Linux电脑或虚拟机的python脚本
 1) 安装python `bluepy`库。
 ```bash
 sudo apt-get install python3-pip libglib2.0-dev
@@ -95,6 +97,12 @@ sudo python3.8 send_ble.py
 
 `send()`错误结果，如下,多执行几次,多次不行，esp32 reset一下(**或者检查是否有其他设备连接ESP32的GATT服务器**):
 > Failed to connect or communicate with the device: Failed to connect to peripheral 88:13:bf:0c:12:59, addr type: public  
+
+##### 基于Windows系统
+如果使用基于wsl2的虚拟机，虚拟机可能不支持蓝牙，且windows系统不支持bluepy那么可以使用python bleak库, 在windows系统安装好python3后，具体教程请查看[bleak官方](https://github.com/hbldh/bleak)以及[参考教程](https://blog.csdn.net/rory_wind/article/details/128821945#:~:text=windows%20%E7%AB%AF%E4%BD%BF)
+```bash
+pip install bleak
+```
 
 #### (2) 案例代码解释
 ##### 2.1 Makefile
@@ -463,4 +471,4 @@ struct ble_gatt_access_ctxt {
 ```
 
 ### ACKNOWLEDGMENTS
-特别感谢赵同学在BLE bluepy库以及自定义蓝牙地址上调试提供的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
+特别感谢赵同学在BLE bluepy库以及自定义蓝牙地址上调试提供的帮助, 以及周同学在windows系统蓝牙bleak库上以及苹果手机NRFCONNECT的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
