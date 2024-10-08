@@ -99,7 +99,7 @@ sudo python3.8 send_ble.py
 > Failed to connect or communicate with the device: Failed to connect to peripheral 88:13:bf:0c:12:59, addr type: public  
 
 ##### 基于Windows系统
-如果使用基于wsl2的虚拟机，虚拟机可能不支持蓝牙，且windows系统不支持bluepy那么可以使用python bleak库, 在windows系统安装好python3后，具体教程请查看[bleak官方](https://github.com/hbldh/bleak)以及[参考教程](https://blog.csdn.net/rory_wind/article/details/128821945#:~:text=windows%20%E7%AB%AF%E4%BD%BF)
+如果使用基于wsl2的虚拟机，虚拟机可能不支持蓝牙，且windows系统不支持bluepy库, 那么可以使用python bleak库, 在windows系统安装好python3后，具体教程请查看[bleak官方](https://github.com/hbldh/bleak)以及[参考教程](https://blog.csdn.net/rory_wind/article/details/128821945#:~:text=windows%20%E7%AB%AF%E4%BD%BF)
 ```bash
 pip install bleak
 ```
