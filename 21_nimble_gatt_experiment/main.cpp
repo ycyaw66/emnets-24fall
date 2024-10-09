@@ -113,7 +113,6 @@ void get_imu_data(MPU6050 mpu, float *imu_data){
     int16_t ax, ay, az, gx, gy, gz;
     for(int i = 0; i < SAMPLES_PER_GESTURE; ++i)
     {
-        i += 1;
         /* code */
         delay_ms(collect_interval_ms);
         mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
