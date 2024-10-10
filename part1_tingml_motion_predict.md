@@ -397,6 +397,10 @@ make BOARD=esp32-wroom-32 flash term
 
 **注意**：按着教程案例走,基本上在模型推理方面得到一个简单的版本方案,且结合根据第一个实验的内容,简单版本是完成了, 适当增大模型参数(如通道数),在某些模型结构可获得不错的性能.
 
+在`12_tingml_gesture_predict_experiment`,`21_nimble_gatt_experiment`, `31_mqtt_thingsboard_experiment`里面代码有一行存在问题，请在这些文件夹的`main.cpp`的`get_imu_data()`函数里，按下面图中所示，将`i+=1;`去掉。
+![i+=1](./figs/error_10.png)
+
+
 ### 问题解答
 
 (1) 问题一

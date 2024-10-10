@@ -248,6 +248,7 @@ string DEFAULT_MQTT_CLIENT_ID = "esp32_test";
 string DEFAULT_MQTT_USER = "esp32";
 string DEFAULT_MQTT_PWD = "esp32";
 // Please enter the IP of the computer on which you have ThingsBoard installed.
+// (主机IP),不要使用虚拟机IP。
 string DEFAULT_IPV4 = "x.x.x.x";
 string DEFAULT_TOPIC = "v1/devices/me/telemetry";
 ```
@@ -498,7 +499,7 @@ esp32 终端最终会打印类似以下的信息。
 
 ![alt text](figs/led_state_mqtt.png)
 
-平台也显示刚刚发送的信息。到这里，案例就可以结束了。
+平台也显示刚刚发送的信息。到这里，案例就可以结束了。如果一直持续报错`mqtt_example: Unable to connect client -1 `，无法执行send(), 那么请参考[错误解答](#七错误解答)的第4点和第5点。
 
 #### 4.3 可视化
 接下来，将结合上面案例，实现数据可视化。按照图片操作即可。
@@ -528,9 +529,22 @@ esp32 终端最终会打印类似以下的信息。
 5) 加分点: 添加规则引擎，(1) 根据R,G,B生成一个RGB代码如(FF0000), (2) 设备处于倾斜状态，触发警告，等其他功能。
 
 完成上述内容后，请撰写实验报告，请录制结果视频，在截至时间前，在**学在浙大**上，上传报告。
-**注意**：该实验是最后一个实验，与全部实验挂钩，后续可能需要涉及线下展示，在整个实验占大比分，请保持随时能复刻你实验结果的状态。
+#### 注意
+该实验是最后一个实验，与全部实验挂钩，后续可能需要涉及线下展示，在整个实验占大比分，请保持随时能复刻你实验结果的状态。
 
-**补充**: 没有路由器的同学，建议手机开热点(热点的频段为2.4GHz, 不开流量，手机可以连接校园网)，电脑和设备都连接手机的热点。
+(1) 没有路由器的同学，建议手机开热点(热点的频段为2.4GHz, 不开流量，手机可以连接校园网)，电脑和设备都连接手机的热点。
+(2) Windows 电脑开放端口1883, 具体怎么开放端口，请参考[端口开放](https://blog.csdn.net/m0_43605481/article/details/119255256)。
+(3) VMWARE虚拟机或者virtual box 虚拟机以及wsl都需要设置一下端口转发1883端口。
+
+1) vmware虚拟机(留意端口好，其余虚拟机IP以你虚拟机网关分配为主)
+![vmware port转发](./figs/port.png)
+
+2) virtual box虚拟机
+![virtual box1](./figs/Presentation1_01.png)
+
+3) wsl2, 请参考该文章[如何在局域网的其他主机上中访问本机的WSL2](https://zhuanlan.zhihu.com/p/425312804)，开放并转发1883端口。
+
+(4) 最后，ESP32里面的MQTT服务器IP请使用主机IP，不是虚拟机IP，请保证主机和ESP32在同一个网段下。
 
 ### 六、代码更新
 老版本等待IP分配，是查看是否能成功MQTT连接，这边会导致一些问题。（不改其实大概率也没有问题。）
@@ -601,6 +615,11 @@ do
 3) 如果出现类似下面的stackflow错误，请将对应的报错的线程的线程栈空间变大。比如下面motion_predict_thread原始栈空间是2048, 可将之改大，改大后如果会出现问题1，那么接着改小`kTensorArenaSize`。
 ![stackflow](./figs/stackflow.png)
 
+4) 如果在30_mqtt_thinsboard实验中类似下面问题，持续报错，请参考[注意](#注意), 检测是否转发并开放端口、主机和ESP32是否同一网段、是否用主机IP（不要用虚拟机IP）。
+![alt text](./figs/3_0_error.png)
+
+5) 如果持续报下面错误（如果报错一会之后就不再报错可以不用在意），请参考[代码更新](#六代码更新)，完成代码更新。
+![alt text](./figs/3_0_error_1.png)
 
 ### ACKNOWLEDGMENTS
 特别感谢方同学在WIFI连接上提供的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
