@@ -92,7 +92,22 @@ void *_imu_thread(void *arg)
 
     // Initialize variables
     int16_t ax, ay, az, gx, gy, gz;
-    delay_ms(1000);
+
+    float avg_ax = 0, avg_ay = 0, avg_az = 0, avg_gx = 0, avg_gy = 0, avg_gz = 0;
+    for (int i = 0; i < 100; i++) {
+        mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+        avg_ax += ax / accel_fs_convert;
+        avg_ay += ay / accel_fs_convert;
+        avg_az += az / accel_fs_convert;
+        avg_gx += gx / gyro_fs_convert;
+        avg_gy += gy / gyro_fs_convert;
+        avg_gz += gz / gyro_fs_convert;
+        delay_ms(50);
+    }
+    avg_ax /= 100; avg_ay /= 100; avg_az /= 100;
+    avg_gx /= 100; avg_gy /= 100; avg_gz /= 100;
+
+    delay_ms(4000);
     int i = 0;
     // Main loop
     while (1) {
@@ -102,12 +117,12 @@ void *_imu_thread(void *arg)
         mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
         MPU6050Data data;
         // Convert raw sensor data to real values
-        data.ax = ax / accel_fs_convert;
-        data.ay = ay / accel_fs_convert;
-        data.az = az / accel_fs_convert;
-        data.gx = gx / gyro_fs_convert;
-        data.gy = gy / gyro_fs_convert;
-        data.gz = gz / gyro_fs_convert;
+        data.ax = ax / accel_fs_convert - avg_ax;
+        data.ay = ay / accel_fs_convert - avg_ay;
+        data.az = az / accel_fs_convert - avg_az + g_acc;
+        data.gx = gx / gyro_fs_convert - avg_gx;
+        data.gy = gy / gyro_fs_convert - avg_gy;
+        data.gz = gz / gyro_fs_convert - avg_gz;
         // Print sensor data and balance angle
         LOG_INFO("[main]%d:(X,Y,Z):%.02f:%.02f:%.02f:(m/s^2)(XG,YG,ZG):%.02f:%.02f:%.02f:(°/s)\n", i, data.ax, data.ay, data.az, data.gx, data.gy, data.gz);
     }
