@@ -17,6 +17,14 @@ using namespace std;
 static char stack_for_motion_thread[THREAD_STACKSIZE];
 static char stack_for_led_thread[THREAD_STACKSIZE];
 static kernel_pid_t _led_pid;
+#define LED_MSG_TYPE_NONE    (0x3110)
+#define LED_MSG_TYPE_RED     (0x3111)
+#define LED_MSG_TYPE_GREEN   (0x3112)
+#define LED_MSG_TYPE_YELLOW  (0x3113)
+#define LED_MSG_TYPE_BLUE    (0x3114)
+#define LED_MSG_TYPE_MAGENTA (0x3115)
+#define LED_MSG_TYPE_CYAN    (0x3116)
+#define LED_MSG_TYPE_WHITE   (0x3117)
 #define LED_GPIO_R GPIO26
 #define LED_GPIO_G GPIO25
 #define LED_GPIO_B GPIO27
@@ -47,28 +55,61 @@ void *_led_thread(void *arg)
         // Input your codes
         // Wait for a message to control the LED
         // Display different light colors based on the motion state of the device.
-        delay_ms(10);    
+        printf("[LED_THREAD] WAIT\n");
+        msg_t msg;
+        msg_receive(&msg);
+        switch (msg.type) {
+            case LED_MSG_TYPE_NONE:
+                led.change_led_color(0);
+                printf("[LED_THREAD]: LED TURN OFF!! DEVICE IS Stationary!!\n");
+                break;
+            case LED_MSG_TYPE_RED:
+                led.change_led_color(1);
+                printf("[LED_THREAD]: LED TURN RED!! DEVICE IS Tilted!!\n");
+                break;
+            case LED_MSG_TYPE_GREEN:
+                led.change_led_color(2);
+                printf("[LED_THREAD]: LED TURN GREEN!! DEVICE IS Moving!!\n");
+                break;
+            case LED_MSG_TYPE_YELLOW:
+                led.change_led_color(3);
+                printf("[LED_THREAD]: LED TURN YELLOW!! DEVICE IS MovingX!!\n");
+                break;
+            case LED_MSG_TYPE_BLUE:
+                led.change_led_color(4);
+                printf("[LED_THREAD]: LED TURN BLUE!! DEVICE IS Rotating!!\n");
+                break;
+            case LED_MSG_TYPE_MAGENTA:
+                led.change_led_color(5);
+                printf("[LED_THREAD]: LED TURN MAGENTA!! DEVICE IS MovingY!!\n");
+                break;
+            case LED_MSG_TYPE_WHITE:
+                led.change_led_color(7);
+                printf("[LED_THREAD]: LED TURN WHITE!!\n");
+                break;
+            default:
+                break;
+        }
     }
     return NULL;
 }
 
 float gyro_fs_convert = 1.0;
 float accel_fs_convert;
-
+float avg_ax = 0, avg_ay = 0, avg_az = 0, avg_gx = 0, avg_gy = 0, avg_gz = 0;
 void get_imu_data(MPU6050 mpu, float *imu_data){
     int16_t ax, ay, az, gx, gy, gz;
     for(int i = 0; i < SAMPLES_PER_GESTURE; ++i)
     {
-        i += 1;
         /* code */
         delay_ms(20);
         mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-        imu_data[i*6 + 0] = ax / accel_fs_convert;
-        imu_data[i*6 + 1] = ay / accel_fs_convert;
-        imu_data[i*6 + 2] = az / accel_fs_convert;
-        imu_data[i*6 + 3] = gx / gyro_fs_convert;
-        imu_data[i*6 + 4] = gy / gyro_fs_convert;
-        imu_data[i*6 + 5] = gz / gyro_fs_convert;
+        imu_data[i*6 + 0] = ax / accel_fs_convert - avg_ax;
+        imu_data[i*6 + 1] = ay / accel_fs_convert - avg_ay;
+        imu_data[i*6 + 2] = az / accel_fs_convert - avg_az + g_acc;
+        imu_data[i*6 + 3] = gx / gyro_fs_convert - avg_gx;
+        imu_data[i*6 + 4] = gy / gyro_fs_convert - avg_gy;
+        imu_data[i*6 + 5] = gz / gyro_fs_convert - avg_gz;
     }
 } 
 
@@ -110,10 +151,36 @@ void *_motion_thread(void *arg)
     else
         printf("[IMU_THREAD] Unknown ACCEL_FS: 0x%x\n", accel_fs_g);
 
+    
+    
+
     // Calculate accelerometer conversion factor
     accel_fs_convert = 32768.0 / accel_fs_real;
     float imu_data[SAMPLES_PER_GESTURE * 6] = {0};
     int data_len = SAMPLES_PER_GESTURE * 6;
+    int16_t ax, ay, az, gx, gy, gz;
+    // 花5s调零
+    for (int i = 0; i < 100; i++) {
+        msg_t msg;
+        msg.type = LED_MSG_TYPE_WHITE;
+        if (msg_send(&msg, _led_pid) <= 0){
+            printf("[IMU_THREAD]: possibly lost interrupt.\n");
+        }
+        else{
+            printf("[IMU_THREAD]: Successfully set interrupt.\n");
+        }
+        mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+        avg_ax += ax / accel_fs_convert;
+        avg_ay += ay / accel_fs_convert;
+        avg_az += az / accel_fs_convert;
+        avg_gx += gx / gyro_fs_convert;
+        avg_gy += gy / gyro_fs_convert;
+        avg_gz += gz / gyro_fs_convert;
+        delay_ms(50);
+    }
+    avg_ax /= 100; avg_ay /= 100; avg_az /= 100;
+    avg_gx /= 100; avg_gy /= 100; avg_gz /= 100;
+
     delay_ms(200);
     // Main loop
     int predict_interval_ms = 200;
@@ -127,7 +194,29 @@ void *_motion_thread(void *arg)
         get_imu_data(mpu, imu_data);
         ret = predict(imu_data, data_len, threshold, class_num);
         // tell the led thread to do some operations
-        // input your code
+        msg_t msg;
+        switch (ret) {
+            case 0:
+                msg.type = LED_MSG_TYPE_NONE;
+                break;
+            case 1:
+                msg.type = LED_MSG_TYPE_RED;
+                break;
+            case 2:
+                msg.type = LED_MSG_TYPE_BLUE;
+                break;
+            case 3:
+                msg.type = LED_MSG_TYPE_GREEN;
+                break;
+            default:
+                break;
+        }
+        if (msg_send(&msg, _led_pid) <= 0){
+            printf("[IMU_THREAD]: possibly lost interrupt.\n");
+        }
+        else{
+            printf("[IMU_THREAD]: Successfully set interrupt.\n");
+        }
         // Print result
         printf("Predict: %d, %s\n", ret, motions[ret].c_str());
     }
