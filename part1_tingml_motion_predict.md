@@ -228,7 +228,6 @@ void get_imu_data(MPU6050 mpu, float *imu_data){
     int16_t ax, ay, az, gx, gy, gz;
     for(int i = 0; i < SAMPLES_PER_GESTURE; ++i)
     {
-        i += 1;
         /* code */
         delay_ms(20);
         mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
@@ -383,7 +382,26 @@ make BOARD=esp32-wroom-32 flash term
 > 2024-08-07 01:48:53,340 # Motion prediction: 0  
 > 2024-08-07 01:48:53,341 # Predict: 0, Stationary  
 
-### 问题解决
+
+
+### 正式实验: 基于神经网络进行设备运动状态识别
+
+该环节代码仍然处于`12_tingml_gesture_predict_experiment`，通过上面几个案例，想必你们已经会数据集收集、模型创建、数据集导入、模型训练、模型测试、模型生成部署以及最终的推理，本实验需要将这几部分结合，实现以下具体功能：
+1) 完善`12_tingml_gesture_predict_experiment/ledcontroller.cpp`两个函数，这个直接拷贝你们实验一时候写好的代码。
+2) 完善`12_tingml_gesture_predict_experiment/main.cpp`多处代码, 实现多线程, 一:定期神经网络识别设备运动状态并打印结果, 二:led根据识别结果显示不同颜色, 可同实验一.
+3) 案例给出了MLP模型和CNN模型,请从模型训练,模型测试以及真实部署三个方面进行识别准确度性能对比.
+4) 自主设计一个运动状态识别模型(其他模型结构或者适当增大模型参数),要去比案例的CNN模型性能好.
+5) 加分点: 实现分辨更多运动状态，如X轴方向平移、Y轴方向平移等等; 给出不同模型更多角度的性能评价如推理时间开销(主机端测试时或者实际ESP32部署时推理开销); 模型创新度高; 计算出模型在ESP32部署时所需要的最小内存开销; 提交真实的视频成果(能有效展示设备运动状态识别情况).
+
+完成上述内容后，请撰写实验报告，录制结果视频，在截至时间前，在**学在浙大**上，上传报告和视频成果。
+
+**注意**：按着教程案例走,基本上在模型推理方面得到一个简单的版本方案,且结合根据第一个实验的内容,简单版本是完成了, 适当增大模型参数(如通道数),在某些模型结构可获得不错的性能.
+
+在`12_tingml_gesture_predict_experiment`,`21_nimble_gatt_experiment`, `31_mqtt_thingsboard_experiment`里面代码有一行存在问题，请在这些文件夹的`main.cpp`的`get_imu_data()`函数里，按下面图中所示，将`i+=1;`去掉。
+![i+=1](./figs/error_10.png)
+
+
+### 问题解答
 
 (1) 问题一
 > external_modules/gesture/main_functions.cc: In function 'void setup()':  
@@ -400,25 +418,19 @@ git clone https://github.com/RIOT-OS/RIOT -b 2024.10-devel
 mv emnets_experiment ~/RIOT/examples/
 ```
 
+(2) ‵make BOARD=esp32-wroom-32 term -C tests/pkg/tflite-micro/`指令出现以下问题，
+> env: 'cmake': No such file or directory  
 
-### 正式实验: 基于神经网络进行设备运动状态识别
+请执行以下命令:
+```bash
+sudo apt install -y cmake
+```
 
-该环节代码仍然处于`12_tingml_gesture_predict_experiment`，通过上面几个案例，想必你们已经会数据集收集、模型创建、数据集导入、模型训练、模型测试、模型生成部署以及最终的推理，本实验需要将这几部分结合，实现以下具体功能：
-1) 完善`12_tingml_gesture_predict_experiment/ledcontroller.cpp`两个函数，这个直接拷贝你们实验一时候写好的代码。
-2) 完善`12_tingml_gesture_predict_experiment/main.cpp`多处代码, 实现多线程, 一:定期神经网络识别设备运动状态并打印结果, 二:led根据识别结果显示不同颜色, 可同实验一.
-3) 案例给出了MLP模型和CNN模型,请从模型训练,模型测试以及真实部署三个方面进行识别准确度性能对比.
-4) 自主设计一个运动状态识别模型(其他模型结构或者适当增大模型参数),要去比案例的CNN模型性能好.
-5) 加分点: 实现分辨更多运动状态，如X轴方向平移、Y轴方向平移等等; 给出不同模型更多角度的性能评价如推理时间开销(主机端测试时或者实际ESP32部署时推理开销); 模型创新度高; 计算出模型在ESP32部署时所需要的最小内存开销; 提交真实的视频成果(能有效展示设备运动状态识别情况).
-
-完成上述内容后，请撰写实验报告，录制结果视频，在截至时间前，在**学在浙大**上，上传报告和视频成果。
-
-**注意**：按着教程案例走,基本上在模型推理方面得到一个简单的版本方案,且结合根据第一个实验的内容,简单版本是完成了, 适当增大模型参数(如通道数),在某些模型结构可获得不错的性能.
-
-
-### 补充
-前面提到过, 当出现以下问题,请到 `~/RIOT/build/pkg/tflite-micro/tensorflow/lite/micro/micro_mutable_op_resolver.h` 文件中找到对应的添加方法.
+(3) 如遇到类似下面问题，提示缺少什么op:
 > 2024-08-07 01:36:02,365 # Didn't find op for builtin opcode 'CONV_2D'  
 > 2024-08-07 01:36:02,368 # Failed to get registration from op code CONV_2D  
+
+请到 `~/RIOT/build/pkg/tflite-micro/tensorflow/lite/micro/micro_mutable_op_resolver.h` 文件中找到对应的添加方法.
 
 * AddAbs()
 * AddAdd()
@@ -435,7 +447,17 @@ mv emnets_experiment ~/RIOT/examples/
 * AddRelu()
 * ...
 
+然后在`external_modules/gesture/main_functions.cc`里面,改大resolver数量,然后加入上述方法.例如,这里要添加`Add`
+```c++
+// main_functions.cc
+// 下面数量是10,原来是9,这里我们添加一个op, Add
+static tflite::MicroMutableOpResolver<10> resolver;
+if (resolver.AddAdd() != kTfLiteOk) {
+    return;
+}
+```
 
+(4) 如果碰到内存相关的问题，请改小模型或者修改kTensorArenaSize.
 
 ### ACKNOWLEDGMENTS
 特别感谢孙同学在解决Python环境中TensorFlow版本安装问题上提供的帮助。同时，鼓励其他同学在遇到并解决类似问题后，积极联系助教，分享自己的解决方案，共同促进学习社区的进步。
