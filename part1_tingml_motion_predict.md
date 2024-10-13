@@ -15,6 +15,7 @@
 
 ### 运行环境安装(Ubuntu22.04 和 Ubuntu 20.04 请按照对应的步骤进行安装。)
 ```bash
+sudo apt install -y cmake
 # python3.8 和 python3.9都可以，其余目前版本不兼容
 # ubuntu 22.04 请执行下面命令
 sudo apt install -y software-properties-common
