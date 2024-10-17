@@ -502,7 +502,7 @@ esp32 终端最终会打印类似以下的信息。
 平台也显示刚刚发送的信息。到这里，案例就可以结束了。如果一直持续报错`mqtt_example: Unable to connect client -1 `，无法执行send(), 那么请参考[错误解答](#七错误解答)的第4点和第5点。
 
 #### 4.3 可视化
-接下来，将结合上面案例，实现数据可视化。按照图片操作即可。
+接下来，将结合上面案例，实现数据可视化。按照图片操作即可。如何你的ThingsBoard页面和下面的不一样，那么请直接下载并自行浏览[补充材料-可视化](https://gitee.com/emnets/emnets_experiment/releases/download/material/thingsboard%E5%8F%AF%E8%A7%86%E5%8C%96.pdf)。
 ![mqtt_01](figs/mqtt/mqtt_01.png)
 ![mqtt_02](figs/mqtt/mqtt_02.png)
 ![mqtt_03](figs/mqtt/mqtt_03.png)
