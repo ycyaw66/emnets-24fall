@@ -334,8 +334,15 @@ nimble_autoadv_start(NULL);
 
 另外要实现自定义MAC地址,请浏览`RIOT/build/pkg/nimble/nimble/host/include/host/ble_hs_id.h`里面的函数,尤其是`int ble_hs_id_set_rnd(const uint8_t *rnd_addr);`,其次修改地址最好在`ble_hs_id_infer_auto(0, &own_addr_type);`前面修改。
 
+1) 如果想多用户连接，可以参考老版本的nimble 连接event控制的代码，[nimble_heart_rate_sensor](https://github.com/RIOT-OS/RIOT/blob/2023.01-branch/examples/nimble_heart_rate_sensor/main.c)，
+另外请在Makefile中加入一行内容。(MYNEWT_VAL_BLE_MAX_CONNECTIONS最少为3， 经测试， MYNEWT_VAL_BLE_MAX_CONNECTIONS为3时，能支持两台设备同时连接GATT服务器。)
+```bash
+CFLAGS += -DMYNEWT_VAL_BLE_MAX_CONNECTIONS=3
+```
+或者还有个思路，Nimble的GATT在蓝牙成功连接之后，会执行关闭蓝牙广播，那么可以尝试在某处添加开启蓝牙广播的代码，`nimble_autoadv_start(NULL);`。同样需要在Makefile文件加入上面一行代码。
 
-1) 上面用到的部分结构体，内容并不重要，放这，看看就行。
+
+2) 上面用到的部分结构体，内容并不重要，放这，看看就行。
 ```c++
 
 
