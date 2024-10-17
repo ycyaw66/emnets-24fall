@@ -542,7 +542,7 @@ esp32 终端最终会打印类似以下的信息。
 2) virtual box虚拟机
 ![virtual box1](./figs/Presentation1_01.png)
 
-3) wsl2, 请参考该文章[如何在局域网的其他主机上中访问本机的WSL2](https://zhuanlan.zhihu.com/p/425312804)，开放并转发1883端口。
+3) wsl2, 请参考该文章[开放端口](https://zhuanlan.zhihu.com/p/425312804)和[端口转发](https://blog.csdn.net/keyiis_sh/article/details/113819244)，开放并转发1883端口。
 
 (4) 最后，ESP32里面的MQTT服务器IP请使用主机IP，不是虚拟机IP，请保证主机和ESP32在同一个网段下。
 
