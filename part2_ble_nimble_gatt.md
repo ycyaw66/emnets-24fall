@@ -311,7 +311,7 @@ static int gatt_svr_chr_access_rw_demo(
 1) 完善`21_nimble_gatt_experiment/ledcontroller.cpp`两个函数，这个直接拷贝你们实验一中写好的LED代码。
 2) 完善`21_nimble_gatt_experiment/main.cpp`多处代码, 实现多线程, 一:定期神经网络识别设备运动状态并打印结果, 二:led根据识别结果显示不同颜色, 可同实验一.注意，运行你实验二中你觉得最佳的模型。(`21_nimble_gatt_experiment/external_modules`需与实验二保持一致，也可自由发挥) 
 3) 搭建GATT服务器(需要换个蓝牙设备名)，实现蓝牙广播，创建多个可读写的服务或特性。用户可通过蓝牙获取设备当前预测的运动状态，调节设备端模型预测的阈值以及数据采集频率(间隙)、LED灯展示颜色等功能。
-4) 加分点: 自定义蓝牙MAC地址，多用户连接，在终端打印蓝牙连接交互过程中的信息(能体现nimble蓝牙连接理论过程即可)。
+4) 加分点: 自定义蓝牙MAC地址，在终端打印蓝牙连接交互过程中的信息(能体现nimble蓝牙连接理论过程即可)，多用户连接(难度系数很高，若实现，可联系助教，平时分大幅度提高。)。
 
 只要实验要求的最终功能达到，代码如何实现(不管是自行开创，还是按模板进行)都无所谓。
 
@@ -334,8 +334,15 @@ nimble_autoadv_start(NULL);
 
 另外要实现自定义MAC地址,请浏览`RIOT/build/pkg/nimble/nimble/host/include/host/ble_hs_id.h`里面的函数,尤其是`int ble_hs_id_set_rnd(const uint8_t *rnd_addr);`,其次修改地址最好在`ble_hs_id_infer_auto(0, &own_addr_type);`前面修改。
 
+1) 如果想多用户连接，可以参考老版本的nimble 连接event控制的代码，[nimble_heart_rate_sensor](https://github.com/RIOT-OS/RIOT/blob/2023.01-branch/examples/nimble_heart_rate_sensor/main.c)，
+另外请在Makefile中加入一行内容。(MYNEWT_VAL_BLE_MAX_CONNECTIONS最少为3， 经测试， MYNEWT_VAL_BLE_MAX_CONNECTIONS为3时，能支持两台设备同时连接GATT服务器。)
+```bash
+CFLAGS += -DMYNEWT_VAL_BLE_MAX_CONNECTIONS=3
+```
+或者还有个思路，Nimble的GATT在蓝牙成功连接之后，会执行关闭蓝牙广播，那么可以尝试在某处添加开启蓝牙广播的代码，`nimble_autoadv_start(NULL);`。同样需要在Makefile文件加入上面一行代码。
 
-1) 上面用到的部分结构体，内容并不重要，放这，看看就行。
+
+2) 上面用到的部分结构体，内容并不重要，放这，看看就行。
 ```c++
 
 

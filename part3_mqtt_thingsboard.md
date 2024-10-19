@@ -502,7 +502,7 @@ esp32 终端最终会打印类似以下的信息。
 平台也显示刚刚发送的信息。到这里，案例就可以结束了。如果一直持续报错`mqtt_example: Unable to connect client -1 `，无法执行send(), 那么请参考[错误解答](#七错误解答)的第4点和第5点。
 
 #### 4.3 可视化
-接下来，将结合上面案例，实现数据可视化。按照图片操作即可。
+接下来，将结合上面案例，实现数据可视化。按照图片操作即可。如何你的ThingsBoard页面和下面的不一样，那么请直接下载并自行浏览[补充材料-可视化](https://gitee.com/emnets/emnets_experiment/releases/download/material/thingsboard%E5%8F%AF%E8%A7%86%E5%8C%96.pdf)。
 ![mqtt_01](figs/mqtt/mqtt_01.png)
 ![mqtt_02](figs/mqtt/mqtt_02.png)
 ![mqtt_03](figs/mqtt/mqtt_03.png)
@@ -542,7 +542,13 @@ esp32 终端最终会打印类似以下的信息。
 2) virtual box虚拟机
 ![virtual box1](./figs/Presentation1_01.png)
 
-3) wsl2, 请参考该文章[如何在局域网的其他主机上中访问本机的WSL2](https://zhuanlan.zhihu.com/p/425312804)，开放并转发1883端口。
+3) wsl2, 请参考该文章[开放端口](https://zhuanlan.zhihu.com/p/425312804)和[端口转发](https://blog.csdn.net/keyiis_sh/article/details/113819244)(端口转发请看这个，另外一个可能存在问题)，开放并转发1883端口。
+```bash
+# netsh interface portproxy add v4tov4 listenport=[win10端口] listenaddress=0.0.0.0 connectport=[虚拟机的端口] connectaddress=[虚拟机的ip]
+# 主机powershell里面执行
+netsh interface portproxy add v4tov4 listenport=1883 listenaddress=0.0.0.0 connectport=1883 connectaddress=虚拟机IP
+# 虚拟机里面通过ifconfig 查看ipv4最后一段不是1的IP。
+```
 
 (4) 最后，ESP32里面的MQTT服务器IP请使用主机IP，不是虚拟机IP，请保证主机和ESP32在同一个网段下。
 
