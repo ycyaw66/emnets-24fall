@@ -291,6 +291,7 @@ int main(void)
     {
         printf("[MAIN] LED_PID: %d\n", _led_pid);
     }
+    setup();
     // create motion thread
     _motion_pid = thread_create(stack_for_motion_thread, sizeof(stack_for_motion_thread), THREAD_PRIORITY_MAIN - 2,
                             THREAD_CREATE_STACKTEST, _motion_thread, NULL,
