@@ -26,7 +26,7 @@ USEMODULE += shell_cmd_i2c_scan
 # Use automated advertising
 USEMODULE += nimble_autoadv
 # DEVICE NAME 也可自定义
-CFLAGS += -DCONFIG_NIMBLE_AUTOADV_DEVICE_NAME='"NimBLE GATT Example"'
+CFLAGS += -DCONFIG_NIMBLE_AUTOADV_DEVICE_NAME='"NimBLE GATT Controller"'
 CFLAGS += -DCONFIG_NIMBLE_AUTOADV_START_MANUALLY=1
 
 # This has to be the absolute path to the RIOT base directory:

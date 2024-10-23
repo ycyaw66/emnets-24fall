@@ -125,18 +125,10 @@ int predict(float *imu_data, int data_len, float threshold, int class_num){
     printf("------------------------------\n");
     for (unsigned i = 0; i < class_num; ++i) {
         float current = output->data.f[i];
-        printf("[%d] value: %.02f\n", i, current);
         if (current > threshold && current > val) {
             val = current;
             res = i;
         }
-    }
-    // Output the prediction, if there's one
-    if (val > 0) {
-        printf("Motion prediction: %d\n", res);
-    }
-    else {
-        puts("No match found");
     }
     return res;
 }
