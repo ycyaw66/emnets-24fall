@@ -589,7 +589,7 @@ do
 或者
 ![alt text](figs/error_ap.png)
 
-2) 出现下面问题，请在`main.cpp`主函数里面在IMU线程创建前，执行`setup();`完成模型初始化。
+2) 出现下面问题，请在`main.cpp`主函数里面在IMU线程创建前，执行`setup();`完成模型初始化。如果添加`setup();`仍然出现下面问题,请请将`external_modules/gesture/main_functions.cc`的参数`kTensorArenaSize`改小。
 
 > 2024-10-02 19:06:07,645 # EXCEPTION!! exccause=28 (LoadProhibitedCause) @800e06f5 excvaddr=00000000  
 > 2024-10-02 19:06:07,645 # processes:  
