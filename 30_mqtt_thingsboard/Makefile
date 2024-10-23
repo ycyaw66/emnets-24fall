@@ -15,8 +15,8 @@ DEVELHELP ?= 1
 # Change this to 0 show compiler invocation lines by default:
 QUIET ?= 1
 
-WIFI_SSID ?= "EmNets-301"
-WIFI_PASS ?= "eagle402"
+WIFI_SSID ?= "daddy"
+WIFI_PASS ?= "488-daddy"
 
 # use ESP WiFi in station mode as network interface
 USEMODULE += esp_wifi
