@@ -35,7 +35,7 @@ namespace {
 
     // Create an area of memory to use for input, output, and intermediate arrays.
     // Finding the minimum value for your model may require some trial and error.
-    constexpr int kTensorArenaSize = 32 * 1024;
+    constexpr int kTensorArenaSize = 15 * 1024;
     uint8_t tensor_arena[kTensorArenaSize];
 }  // namespace
 
@@ -122,21 +122,13 @@ int predict(float *imu_data, int data_len, float threshold, int class_num){
     // Get the best match from the output tensor
     float val = 0;
     uint8_t res = 0;
-    printf("------------------------------\n");
+    // printf("------------------------------\n");
     for (unsigned i = 0; i < class_num; ++i) {
         float current = output->data.f[i];
-        printf("[%d] value: %.02f\n", i, current);
         if (current > threshold && current > val) {
             val = current;
             res = i;
         }
-    }
-    // Output the prediction, if there's one
-    if (val > 0) {
-        printf("Motion prediction: %d\n", res);
-    }
-    else {
-        puts("No match found");
     }
     return res;
 }

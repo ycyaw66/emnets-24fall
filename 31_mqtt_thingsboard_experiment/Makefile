@@ -28,10 +28,10 @@ DEVELHELP ?= 1
 # Change this to 0 show compiler invocation lines by default:
 QUIET ?= 1
 
-WIFI_SSID ?= "EmNets-301"
-WIFI_PASS ?= "eagle402"
+WIFI_SSID ?= "daddy"
+WIFI_PASS ?= "488-daddy"
 # DEVICE NAME 也可自定义
-CFLAGS += -DCONFIG_NIMBLE_AUTOADV_DEVICE_NAME='"NimBLE GATT Example"'
+CFLAGS += -DCONFIG_NIMBLE_AUTOADV_DEVICE_NAME='"NimBLE GATT TEST"'
 CFLAGS += -DCONFIG_NIMBLE_AUTOADV_START_MANUALLY=1
 
 # use ESP WiFi in station mode as network interface
